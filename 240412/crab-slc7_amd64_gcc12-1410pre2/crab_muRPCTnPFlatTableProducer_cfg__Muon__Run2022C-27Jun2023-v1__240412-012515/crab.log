@@ -1,0 +1,159 @@
+DEBUG 2024-04-11 16:25:15.943 UTC: 	 CRAB Client version: v3.240110
+DEBUG 2024-04-11 16:25:15.943 UTC: 	 Running on: Linux cms02.knu.ac.kr 3.10.0-1160.105.1.el7.x86_64 #1 SMP Thu Dec 7 15:39:45 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux - CentOS Linux 7 (Core)
+DEBUG 2024-04-11 16:25:15.944 UTC: 	 Executing command: 'submit'
+DEBUG 2024-04-11 16:25:15.944 UTC: 	 Found CRAB cache file /u/user/sjws5411/.crab3
+DEBUG 2024-04-11 16:25:15.946 UTC: 	 Will use CRAB plugin ANALYSIS (i.e. will run an analysis job type).
+DEBUG 2024-04-11 16:25:15.952 UTC: 	 Checking credentials
+DEBUG 2024-04-11 16:25:15.952 UTC: 	 Found proxy file /tmp/x509up_u514000061
+DEBUG 2024-04-11 16:25:15.952 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2024-04-11 16:25:15.952 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u514000061
+DEBUG 2024-04-11 16:25:15.998 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2024-04-11 16:25:15.998 UTC: 	 Getting proxy life time left
+DEBUG 2024-04-11 16:25:15.998 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u514000061
+DEBUG 2024-04-11 16:25:16.047 UTC: 	 output : 43136
+43136
+
+ error: 
+ retcode : 0
+DEBUG 2024-04-11 16:25:16.048 UTC: 	 Proxy valid for 11:58:56 hours
+DEBUG 2024-04-11 16:25:16.048 UTC: 	 Encoded data for curl request: subresource=delegatedn
+DEBUG 2024-04-11 16:25:17.434 UTC: 	 Registering user credentials on myproxy for /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod|dev)-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=computers/CN=stefanov(m|m2).cern.ch|/DC=ch/DC=cern/OU=computers/CN=dciangot-tw.cern.ch
+DEBUG 2024-04-11 16:25:17.435 UTC: 	 Executing command :
+ voms-proxy-info --identity --file /tmp/x509up_u514000061
+DEBUG 2024-04-11 16:25:17.491 UTC: 	 output : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+
+ error: 
+ retcode : 0
+DEBUG 2024-04-11 16:25:17.492 UTC: 	 Getting myproxy life time left for 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-04-11 16:25:17.492 UTC: 	 Executing command :
+ myproxy-info -s myproxy.cern.ch -l 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-04-11 16:25:19.078 UTC: 	 output : username: 68229ae13e97b0dfc488515366c6ed3e6420d124
+owner: /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+  renewal policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod|dev)-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=computers/CN=stefanov(m|m2).cern.ch|/DC=ch/DC=cern/OU=computers/CN=dciangot-tw.cern.ch
+  trusted retrieval policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod|dev)-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=computers/CN=stefanov(m|m2).cern.ch|/DC=ch/DC=cern/OU=computers/CN=dciangot-tw.cern.ch
+  timeleft: 472:09:07  (19.7 days)
+
+ error: 
+ retcode : 0
+DEBUG 2024-04-11 16:25:19.078 UTC: 	 Myproxy is valid: 1699740
+DEBUG 2024-04-11 16:25:19.078 UTC: 	 Result of myproxy credential check:
+  Credential exists on myproxy: username: 68229ae13e97b0dfc488515366c6ed3e6420d124  - validity: 19 days, 16:09:00
+DEBUG 2024-04-11 16:25:19.078 UTC: 	 Command use: submit
+DEBUG 2024-04-11 16:25:19.079 UTC: 	 Options use: ['--config', <WMCore.Configuration.Configuration object at 0x7f7fd44ce940>]
+DEBUG 2024-04-11 16:25:19.079 UTC: 	 Encoded data for curl request: subresource=version
+DEBUG 2024-04-11 16:25:20.443 UTC: 	 CRABClient version: v3.240110
+DEBUG 2024-04-11 16:25:20.444 UTC: 	 Instance is prod
+DEBUG 2024-04-11 16:25:20.444 UTC: 	 Server base url is cmsweb.cern.ch
+DEBUG 2024-04-11 16:25:20.444 UTC: 	 Command api workflow
+DEBUG 2024-04-11 16:25:20.444 UTC: 	 Started submission
+DEBUG 2024-04-11 16:25:20.445 UTC: 	 Working on /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515
+DEBUG 2024-04-11 16:25:20.446 UTC: 	 Encoded data for curl request: subresource=backendurls
+DEBUG 2024-04-11 16:25:21.846 UTC: 	 Loading required information from the environment
+DEBUG 2024-04-11 16:25:21.847 UTC: 	 Found CMSSW_14_1_0_pre2 for slc7_amd64_gcc12 with base /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2
+DEBUG 2024-04-11 16:25:21.847 UTC: 	 Loading required information from the environment
+DEBUG 2024-04-11 16:25:21.847 UTC: 	 Found CMSSW_14_1_0_pre2 for slc7_amd64_gcc12 with base /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2
+DEBUG 2024-04-11 16:25:21.847 UTC: 	 UNIQUE NAME: tarUUID addee497-6062-4392-87cf-75c3a429dd7c 
+DEBUG 2024-04-11 16:25:21.848 UTC: 	 self.config: from WMCore.Configuration import Configuration
+config = Configuration()
+config.section_('General')
+config.General.transferLogs = False
+config.General.transferOutputs = True
+config.General.requestName = 'muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515'
+config.section_('JobType')
+config.JobType.pluginName = 'Analysis'
+config.JobType.psetName = '/u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/NanoAODTnP/test/muRPCTnPFlatTableProducer_cfg.py'
+config.section_('Data')
+config.Data.splitting = 'LumiBased'
+config.Data.outputDatasetTag = 'muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1'
+config.Data.outLFNDirBase = '/store/user/joshin/RPC/TnP-NanoAOD/240412-012515'
+config.Data.unitsPerJob = 100
+config.Data.publication = False
+config.Data.allowNonValidInputDataset = True
+config.Data.inputDataset = '/Muon/Run2022C-27Jun2023-v1/AOD'
+config.section_('Site')
+config.Site.storageSite = 'T3_KR_KNU'
+config.section_('User')
+config.section_('Debug')
+
+DEBUG 2024-04-11 16:25:21.848 UTC: 	 self.config.JobType.psetName: /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/NanoAODTnP/test/muRPCTnPFlatTableProducer_cfg.py
+INFO 2024-04-11 16:25:21.848 UTC: 	 Importing CMSSW configuration /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/NanoAODTnP/test/muRPCTnPFlatTableProducer_cfg.py
+INFO 2024-04-11 16:25:21.851 UTC: 	 Finished importing CMSSW configuration /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/NanoAODTnP/test/muRPCTnPFlatTableProducer_cfg.py
+DEBUG 2024-04-11 16:25:21.851 UTC: 	 Writing CMSSW configuration to /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515/inputs/PSet.py
+DEBUG 2024-04-11 16:25:21.888 UTC: 	 The following EDM output files will be collected: ['output.root']
+DEBUG 2024-04-11 16:25:21.888 UTC: 	 The following TFile output files will be collected: []
+DEBUG 2024-04-11 16:25:21.888 UTC: 	 The following user output files (not listed as PoolOuputModule or TFileService in the CMSSW PSet) will be collected: 
+DEBUG 2024-04-11 16:25:21.888 UTC: 	 Loading required information from the environment
+DEBUG 2024-04-11 16:25:21.888 UTC: 	 Found CMSSW_14_1_0_pre2 for slc7_amd64_gcc12 with base /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2
+DEBUG 2024-04-11 16:25:21.889 UTC: 	 Making tarball in /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515/inputs/addee497-6062-4392-87cf-75c3a429dd7cdefault.tgz
+DEBUG 2024-04-11 16:25:21.890 UTC: 	 Checking directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/bin
+DEBUG 2024-04-11 16:25:21.891 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/bin to tarball
+DEBUG 2024-04-11 16:25:21.898 UTC: 	 Checking directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/python
+DEBUG 2024-04-11 16:25:21.898 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/python to tarball
+DEBUG 2024-04-11 16:25:21.954 UTC: 	 Checking directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/cfipython
+DEBUG 2024-04-11 16:25:21.954 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/cfipython to tarball
+DEBUG 2024-04-11 16:25:22.090 UTC: 	 Checking directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/lib
+DEBUG 2024-04-11 16:25:22.090 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/lib to tarball
+DEBUG 2024-04-11 16:25:22.389 UTC: 	 Checking directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/biglib
+DEBUG 2024-04-11 16:25:22.389 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/biglib to tarball
+DEBUG 2024-04-11 16:25:22.392 UTC: 	 Checking directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/module
+DEBUG 2024-04-11 16:25:22.392 UTC: 	 Checking directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/config/SCRAM/hooks
+DEBUG 2024-04-11 16:25:22.392 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/config/SCRAM/hooks to tarball
+DEBUG 2024-04-11 16:25:22.421 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/DPGAnalysis/MuonTools/interface to tarball
+DEBUG 2024-04-11 16:25:22.427 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/DPGAnalysis/MuonTools/python to tarball
+DEBUG 2024-04-11 16:25:22.460 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/NanoAODTnP/data to tarball
+DEBUG 2024-04-11 16:25:22.596 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/NanoAODTnP/python to tarball
+DEBUG 2024-04-11 16:25:22.609 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/SegmentAndTrackOnRPC/data to tarball
+DEBUG 2024-04-11 16:25:22.651 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/SegmentAndTrackOnRPC/interface to tarball
+DEBUG 2024-04-11 16:25:22.654 UTC: 	 Adding directory /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/SegmentAndTrackOnRPC/python to tarball
+DEBUG 2024-04-11 16:25:22.832 UTC: 	 Uploading archive /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515/inputs/addee497-6062-4392-87cf-75c3a429dd7cdefault.tgz (0.749023.1 MB) to the CRAB cache. Using URI https://cmsweb.cern.ch/S3/crabcache_prod
+DEBUG 2024-04-11 16:25:23.393 UTC: 	 Encoded data for curl request: subresource=upload&objecttype=sandbox&tarballname=22f3e54f8db6a2db10e47438949d6f2de2285be8a880ae1072045e22b75c2465.tar.gz
+DEBUG 2024-04-11 16:25:24.748 UTC: 	 sandbox 22f3e54f8db6a2db10e47438949d6f2de2285be8a880ae1072045e22b75c2465.tar.gz is already in the S3 store, will not upload again
+DEBUG 2024-04-11 16:25:24.749 UTC: 	 Loading required information from the environment
+DEBUG 2024-04-11 16:25:24.749 UTC: 	 Found CMSSW_14_1_0_pre2 for slc7_amd64_gcc12 with base /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2
+DEBUG 2024-04-11 16:25:24.750 UTC: 	 Making tarball in /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515/inputs/debugFiles.tgz
+DEBUG 2024-04-11 16:25:24.759 UTC: 	 Uploading archive /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515/inputs/debugFiles.tgz (1 KB) to the CRAB cache. Using URI https://cmsweb.cern.ch/S3/crabcache_prod
+DEBUG 2024-04-11 16:25:24.764 UTC: 	 Encoded data for curl request: subresource=upload&objecttype=sandbox&tarballname=0c9ece8ad86782a2ee127dcd90a06dc63758c7f4168790c9dcefb693fc69c4fa.tar.gz
+DEBUG 2024-04-11 16:25:26.160 UTC: 	 Will execute:
+curl -f -v -X POST  -H "User-Agent: CRAB" -F "key=joshin/sandboxes/0c9ece8ad86782a2ee127dcd90a06dc63758c7f4168790c9dcefb693fc69c4fa.tar.gz" -F "AWSAccessKeyId=e57ff634b5334df9819ae3f956de5ca6" -F "policy=eyJleHBpcmF0aW9uIjogIjIwMjQtMDQtMTFUMTc6MjU6MjZaIiwgImNvbmRpdGlvbnMiOiBbeyJidWNrZXQiOiAiY3JhYmNhY2hlX3Byb2QifSwgeyJrZXkiOiAiam9zaGluL3NhbmRib3hlcy8wYzllY2U4YWQ4Njc4MmEyZWUxMjdkY2Q5MGEwNmRjNjM3NThjN2Y0MTY4NzkwYzlkY2VmYjY5M2ZjNjljNGZhLnRhci5neiJ9XX0=" -F "signature=rBT90lksd/DwMFLAQMTsspYHG3g=" -F "file=@/u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515/inputs/debugFiles.tgz" "https://s3.cern.ch/crabcache_prod"
+DEBUG 2024-04-11 16:25:27.323 UTC: 	 exitcode: 0
+stdout: b''
+DEBUG 2024-04-11 16:25:27.323 UTC: 	 sandbox /u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/Workspace-RPC/240412/crab-slc7_amd64_gcc12-1410pre2/crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515/inputs/debugFiles.tgz successully uploaded to S3
+DEBUG 2024-04-11 16:25:27.323 UTC: 	 Result uploading input files: 22f3e54f8db6a2db10e47438949d6f2de2285be8a880ae1072045e22b75c2465.tar.gz 
+DEBUG 2024-04-11 16:25:27.324 UTC: 	 submit() - self.configuration from WMCore.Configuration import Configuration
+config = Configuration()
+config.section_('General')
+config.General.transferLogs = False
+config.General.transferOutputs = True
+config.General.requestName = 'muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515'
+config.section_('JobType')
+config.JobType.pluginName = 'Analysis'
+config.JobType.psetName = '/u/user/sjws5411/Workspace/Efficiency/CMSSW_14_1_0_pre2/src/RPCDPGAnalysis/NanoAODTnP/test/muRPCTnPFlatTableProducer_cfg.py'
+config.section_('Data')
+config.Data.splitting = 'LumiBased'
+config.Data.outputDatasetTag = 'muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1'
+config.Data.outLFNDirBase = '/store/user/joshin/RPC/TnP-NanoAOD/240412-012515'
+config.Data.unitsPerJob = 100
+config.Data.publication = False
+config.Data.allowNonValidInputDataset = True
+config.Data.inputDataset = '/Muon/Run2022C-27Jun2023-v1/AOD'
+config.section_('Site')
+config.Site.storageSite = 'T3_KR_KNU'
+config.section_('User')
+config.section_('Debug')
+
+DEBUG 2024-04-11 16:25:27.324 UTC: 	 submit() - self.configreq {'dryrun': 0, 'workflow': 'crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515', 'saveoutput': 1, 'savelogsflag': 0, 'inputdata': '/Muon/Run2022C-27Jun2023-v1/AOD', 'primarydataset': '', 'nonvaliddata': 1, 'userfiles': [], 'dbsurl': 'https://cmsweb.cern.ch/dbs/prod/global/DBSReader', 'useparent': 0, 'ignorelocality': 0, 'splitalgo': 'LumiBased', 'algoargs': 100, 'totalunits': 0, 'lfn': '/store/user/joshin/RPC/TnP-NanoAOD/240412-012515', 'publication': 0, 'publishdbsurl': 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter', 'publishname2': 'muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1', 'jobtype': 'Analysis', 'generator': 'pythia', 'addoutputfiles': [], 'maxjobruntime': 1250, 'numcores': 1, 'maxmemory': 2000, 'priority': 10, 'nonprodsw': 0, 'asyncdest': 'T3_KR_KNU', 'requireaccelerator': 0, 'oneEventMode': 0, 'extrajdl': [], 'ignoreglobalblacklist': 0, 'partialdataset': 0, 'inputblocks': []}
+DEBUG 2024-04-11 16:25:27.324 UTC: 	 submit() - jobconfig {'addoutputfiles': [], 'tfileoutfiles': [], 'edmoutfiles': ['output.root'], 'jobarch': 'slc7_amd64_gcc12', 'jobsw': 'CMSSW_14_1_0_pre2', 'inputdata': '/Muon/Run2022C-27Jun2023-v1/AOD', 'cacheurl': 'https://cmsweb.cern.ch/S3/crabcache_prod', 'cachefilename': '22f3e54f8db6a2db10e47438949d6f2de2285be8a880ae1072045e22b75c2465.tar.gz', 'debugfilename': '0c9ece8ad86782a2ee127dcd90a06dc63758c7f4168790c9dcefb693fc69c4fa.tar.gz', 'jobtype': 'Analysis'}
+INFO 2024-04-11 16:25:27.324 UTC: 	 Sending the request to the server at cmsweb.cern.ch
+DEBUG 2024-04-11 16:25:27.325 UTC: 	 Submitting {'dryrun': 0, 'workflow': 'crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515', 'saveoutput': 1, 'savelogsflag': 0, 'inputdata': '/Muon/Run2022C-27Jun2023-v1/AOD', 'primarydataset': '', 'nonvaliddata': 1, 'userfiles': [], 'dbsurl': 'https://cmsweb.cern.ch/dbs/prod/global/DBSReader', 'useparent': 0, 'ignorelocality': 0, 'splitalgo': 'LumiBased', 'algoargs': 100, 'totalunits': 0, 'lfn': '/store/user/joshin/RPC/TnP-NanoAOD/240412-012515', 'publication': 0, 'publishdbsurl': 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter', 'publishname2': 'muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1', 'jobtype': 'Analysis', 'generator': 'pythia', 'addoutputfiles': [], 'maxjobruntime': 1250, 'numcores': 1, 'maxmemory': 2000, 'priority': 10, 'nonprodsw': 0, 'asyncdest': 'T3_KR_KNU', 'requireaccelerator': 0, 'oneEventMode': 0, 'extrajdl': [], 'ignoreglobalblacklist': 0, 'partialdataset': 0, 'inputblocks': [], 'tfileoutfiles': [], 'edmoutfiles': ['output.root'], 'jobarch': 'slc7_amd64_gcc12', 'jobsw': 'CMSSW_14_1_0_pre2', 'cacheurl': 'https://cmsweb.cern.ch/S3/crabcache_prod', 'cachefilename': '22f3e54f8db6a2db10e47438949d6f2de2285be8a880ae1072045e22b75c2465.tar.gz', 'debugfilename': '0c9ece8ad86782a2ee127dcd90a06dc63758c7f4168790c9dcefb693fc69c4fa.tar.gz'} 
+DEBUG 2024-04-11 16:25:27.325 UTC: 	 Encoded data for curl request: dryrun=0&workflow=crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515&saveoutput=1&savelogsflag=0&inputdata=%2FMuon%2FRun2022C-27Jun2023-v1%2FAOD&primarydataset=&nonvaliddata=1&dbsurl=https%3A%2F%2Fcmsweb.cern.ch%2Fdbs%2Fprod%2Fglobal%2FDBSReader&useparent=0&ignorelocality=0&splitalgo=LumiBased&algoargs=100&totalunits=0&lfn=%2Fstore%2Fuser%2Fjoshin%2FRPC%2FTnP-NanoAOD%2F240412-012515&publication=0&publishdbsurl=https%3A%2F%2Fcmsweb.cern.ch%2Fdbs%2Fprod%2Fphys03%2FDBSWriter&publishname2=muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1&jobtype=Analysis&generator=pythia&maxjobruntime=1250&numcores=1&maxmemory=2000&priority=10&nonprodsw=0&asyncdest=T3_KR_KNU&requireaccelerator=0&oneEventMode=0&ignoreglobalblacklist=0&partialdataset=0&jobarch=slc7_amd64_gcc12&jobsw=CMSSW_14_1_0_pre2&cacheurl=https%3A%2F%2Fcmsweb.cern.ch%2FS3%2Fcrabcache_prod&cachefilename=22f3e54f8db6a2db10e47438949d6f2de2285be8a880ae1072045e22b75c2465.tar.gz&debugfilename=0c9ece8ad86782a2ee127dcd90a06dc63758c7f4168790c9dcefb693fc69c4fa.tar.gz&edmoutfiles=output.root
+DEBUG 2024-04-11 16:25:28.709 UTC: 	 Result: {'result': [{'RequestName': '240411_162528:joshin_crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515'}]}
+INFO 2024-04-11 16:25:28.712 UTC: 	 Success: Your task has been delivered to the prod CRAB3 server.
+INFO 2024-04-11 16:25:28.712 UTC: 	 Task name: 240411_162528:joshin_crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515
+INFO 2024-04-11 16:25:28.713 UTC: 	 Project dir: ./crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515
+INFO 2024-04-11 16:25:28.713 UTC: 	 Please use ' crab status -d ./crab_muRPCTnPFlatTableProducer_cfg__Muon__Run2022C-27Jun2023-v1__240412-012515 ' to check how the submission process proceeds.
+DEBUG 2024-04-11 16:25:28.713 UTC: 	 About to return
