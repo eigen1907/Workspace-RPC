@@ -3,13 +3,12 @@
 ## Recipes
 ### Setup
 ```sh
-CMSSW_VERSION=CMSSW_14_1_0_pre2
-cmsrel ${CMSSW_VERSION}
-cd ./${CMSSW_VERSION}/src
+cmsrel CMSSW_14_1_0_pre2
+cd ./CMSSW_14_1_0_pre2/src
 cmsenv
 git-cms-merge-topic sourcemaru:rpc-tnp-nanoaod_from-${CMSSW_VERSION}
 git clone https://github.com/sourcemaru/RPCDPGAnalysis.git -b tnp-nanoaod
-git clone https://github.com/sourcemaru/workspace-rpc.git
+git clone https://github.com/sourcemaru/Workspace-RPC.git
 scram b
 ```
 
