@@ -40,9 +40,9 @@ for station in stations:
             break
         
         if is_front == True:
-            plt.plot([z, z], [y_min, y_max], c='red', label=f'front chamber, z={z}', linewidth=plotting_size*5)
+            ax.plot([z, z], [y_min, y_max], c='red', label=f'front chamber, z={z}', linewidth=plotting_size*5)
         if is_front == False:
-            plt.plot([z, z], [y_min, y_max], c='blue', label=f'back chamber, z={z}', linewidth=plotting_size*5)
+            ax.plot([z, z], [y_min, y_max], c='blue', label=f'back chamber, z={z}', linewidth=plotting_size*5)
 
     
     ax.set_xlim(station_mean_z - 30, station_mean_z + 30)
