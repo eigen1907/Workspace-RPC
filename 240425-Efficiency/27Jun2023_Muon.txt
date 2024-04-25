@@ -1,0 +1,12 @@
++--------------------------------------------------+-------------------+
+| SCOPE:NAME                                       | [DID TYPE]        |
+|--------------------------------------------------+-------------------|
+| cms:/Muon/Run2022C-27Jun2023-v1/AOD              | DIDType.CONTAINER |
+| cms:/Muon/Run2022C-EXODisappTrk-27Jun2023-v1/AOD | DIDType.CONTAINER |
+| cms:/Muon/Run2022D-27Jun2023-v1/AOD              | DIDType.CONTAINER |
+| cms:/Muon/Run2022D-27Jun2023-v2/AOD              | DIDType.CONTAINER |
+| cms:/Muon/Run2022D-EXODisappTrk-27Jun2023-v1/AOD | DIDType.CONTAINER |
+| cms:/Muon/Run2022D-EXODisappTrk-27Jun2023-v2/AOD | DIDType.CONTAINER |
+| cms:/Muon/Run2022E-27Jun2023-v1/AOD              | DIDType.CONTAINER |
+| cms:/Muon/Run2022E-EXODisappTrk-27Jun2023-v1/AOD | DIDType.CONTAINER |
++--------------------------------------------------+-------------------+

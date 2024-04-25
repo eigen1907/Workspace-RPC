@@ -1,0 +1,7 @@
++-------------------------------------------+-------------------+
+| SCOPE:NAME                                | [DID TYPE]        |
+|-------------------------------------------+-------------------|
+| cms:/SingleMuon/Run2022A-27Jun2023-v1/AOD | DIDType.CONTAINER |
+| cms:/SingleMuon/Run2022B-27Jun2023-v1/AOD | DIDType.CONTAINER |
+| cms:/SingleMuon/Run2022C-27Jun2023-v1/AOD | DIDType.CONTAINER |
++-------------------------------------------+-------------------+
