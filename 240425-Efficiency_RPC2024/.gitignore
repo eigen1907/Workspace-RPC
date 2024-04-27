@@ -2,5 +2,6 @@
 *.png
 *.pdf
 *.tgz
-Pset*
+Pset*.py
+Pset*.pkl
 *.requestcache
