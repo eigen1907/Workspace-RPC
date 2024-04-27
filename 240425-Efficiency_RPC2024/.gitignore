@@ -1,0 +1,6 @@
+*.root
+*.png
+*.pdf
+*.tgz
+Pset*
+*.requestcache
