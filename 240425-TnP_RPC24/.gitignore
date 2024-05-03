@@ -1,6 +1,4 @@
 *.root
-*.png
-*.pdf
 *.tgz
 #Pset*.py
 #Pset*.pkl
