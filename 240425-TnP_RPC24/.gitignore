@@ -1,4 +1,6 @@
 *.root
+*.err
+*.out
 *.tgz
 #Pset*.py
 #Pset*.pkl
