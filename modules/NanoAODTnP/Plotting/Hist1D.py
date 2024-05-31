@@ -11,26 +11,26 @@ from matplotlib.colors import LogNorm
 from NanoAODTnP.RPCGeometry.RPCGeomServ import get_segment, get_roll_name
 
 
-def load_tree(
+def load_data(
     input_path: Path,
     columns: list,
     roll_blacklist_path: Optional[Path] = None,
 ) -> dict:
     ######################################################################################
     ##     COLUMNS
-    ##     'is_fiducial', 'is_matched', 
-    ##     'region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll', 
-    ##     'run', 'cls', 'bx', 'event',
+    ##     'is_matched', 'run', 'cls', 'bx', 'event',
     ##     'tag_pt', 'tag_eta', 'tag_phi', 
     ##     'probe_pt', 'probe_eta', 'probe_phi', 'probe_time', 'probe_dxdz', 'probe_dydz', 
     ##     'dimuon_pt', 'dimuon_mass', 
     ##     'residual_x', 'residual_y', 'pull_x', 'pull_y', 'pull_x_v2', 'pull_y_v2', 
     ######################################################################################
-    data = uproot.open(f"{str(input_path)}:tree").arrays(columns, library='np')
+    roll_info = ['region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll', 'is_fiducial', 'is_matched']
+    data = uproot.open(f"{str(input_path)}:tree").arrays(columns + roll_info, library='np')
     
     fiducial_mask = data['is_fiducial']
+    matched_mask = data['is_matched']
     for key, values in data.items():
-        data[key] = data[key][fiducial_mask]
+        data[key] = data[key][fiducial_mask & matched_mask]
 
     data['roll_name'] = np.array([
         get_roll_name(
@@ -54,24 +54,189 @@ def load_tree(
     return data
 
 
-def filter_by_region(
-    data: dict,
+def get_region_param(
     region: str
-):
+) -> dict:
+    facecolors = {'all': ["#8EFFF9", "#00AEC9"],
+                  'barrel': ['#d3f5e4', '#21bf70'],
+                  'disk123': ["#7CA1FF", "#0714FF"],
+                  'disk4': ["#FF6666", "#FF3300"]}
+    
+    edgecolors = {'all': ['#005F77', '#005F77'],
+                  'barrel': ['#007700', '#007700'],
+                  'disk123': ['#000775', '#000775'],
+                  'disk4': ['#CC0000', '#CC0000']}
+    
+    hatch = ['///', None]
+
     if region == "all":
         is_region = np.vectorize(lambda item: type(item) is str)
+        facecolor = facecolors[region]
+        edgecolor = edgecolors[region]
     elif region == "barrel":
         is_region = np.vectorize(lambda item: item.startswith('W'))
+        facecolor = facecolors[region]
+        edgecolor = edgecolors[region]
     elif region == "disk123":
         is_region = np.vectorize(lambda item: item.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')))
+        facecolor = facecolors[region]
+        edgecolor = edgecolors[region]
     elif region == "disk4":
         is_region = np.vectorize(lambda item: item.startswith(('RE+4', 'RE-4')))
+        facecolor = facecolors[region]
+        edgecolor = edgecolors[region]
     else:
         is_region = np.vectorize(lambda item: item.startswith(region))
-        
-    region_mask = is_region(data['roll_name'])
-    region_data = {}
-    for key, values in data.items():
-        region_data[key] = data[key][region_mask]
+        if region.startswith('W'):
+            facecolor = facecolors['barrel']
+            edgecolor = edgecolors['barrel']
+        elif region.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')):
+            facecolor = facecolors['disk123']
+            edgecolor = edgecolors['disk123']
+        elif region.startswith(('RE+4', 'RE-4')):
+            facecolor = facecolors['disk4']
+            edgecolor = edgecolors['disk4']
+        else:
+            facecolor = facecolors['all']
+            edgecolor = edgecolors['all']
 
-    return region_data
+    region_param = {'is_region': is_region,
+                    'facecolor': facecolor,
+                    'edgecolor': edgecolor,
+                    'hatch': hatch}
+    return region_param
+
+
+def plot_hist1d_cls_region(
+    region: str,
+    region_label: str,
+    data_list: list,
+    data_label_list: list,
+    label: str = "Work in Progress",
+    com: float = 13.6,
+    log_scale: bool = False,
+    output_dir: Path = Path.cwd(),
+):
+    region_param = get_region_param(region)
+    mh.style.use(mh.styles.CMS)
+    fig, ax = plt.subplots(figsize=(16, 10))
+    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f"{region_label}", fontsize=30)
+    ax.set_xlabel('Cluster Size', fontsize=24)
+    ax.set_ylabel('Nomalized', fontsize=24)
+    ax.set_xlim(0.5, 10.5)
+    ax.set_xticks([x for x in range(1, 11)])
+    ax.set_ylim(0, 0.65)
+    if log_scale == True: 
+        ax.set_yscale('log')    
+    for idx in range(len(data_list)):
+        region_mask = region_param['is_region'](data_list[idx]['roll_name'])
+        region_data = {}
+        for key, values in data_list[idx].items():
+            region_data[key] = data_list[idx][key][region_mask]
+    
+        hist, bins = np.histogram(region_data['cls'], bins = 11, range = (0, 11))
+        mh.histplot(
+            hist,
+            bins = bins - 0.5,
+            ax = ax,
+            yerr = False,
+            histtype = "fill",
+            facecolor = region_param['facecolor'][idx],
+            edgecolor = region_param['edgecolor'][idx],
+            linewidth = 1.6,
+            flow = None,
+            label = f"{data_label_list[idx]}",
+            alpha = 0.5,
+            hatch = region_param['hatch'][idx],
+            density = True,
+        )
+
+    legend = ax.legend(loc=(0.975, 0.925), #xycoords='axes fraction', 
+                       fontsize=14, alignment='right')
+
+    ax.annotate(f"{np.mean(region_data['cls']) : .3f}", xy=(0.875, 0.925),
+                xycoords='axes fraction', fontsize=14, alignment='right')
+
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
+    fig.savefig(output_dir / f"hist1d-cls-{region}.png")
+
+
+def plot_hist1d(
+    value: str, # 'bx', 'cls', 'residual_x'
+    data_path_list: list[Path],
+    data_label_list: list[str],
+    roll_blacklist_path_list: list[Path],
+    label: str,
+    com: float,
+    log_scale: bool = False,
+    output_dir: Path = Path.cwd(),
+):
+    data_list = []
+    for idx in range(len(data_path_list)):
+        data = load_data(
+            input_path = data_path_list[idx],
+            roll_blacklist_path = roll_blacklist_path_list[idx],
+            columns = [value]
+        )
+        if value == 'bx':
+            value_mask = data[value] > -100
+        elif value == 'cls':
+            value_mask = data[value] > 0
+        elif value == 'residual_x':
+            value_mask = data[value] > -300
+
+        for key, values in data.items():
+            data[key] = data[key][value_mask]
+        data_list.append(data)
+
+    regions = ['all', 'barrel', 'disk123', 'disk4',
+               'W-2', 'W-1', 'W+0', 'W+1', 'W+2',
+               'RE+1', 'RE+2', 'RE+3', 'RE+4',
+               'RE-1', 'RE-2', 'RE-3', 'RE-4',]
+
+    region_labels = ['All', 'Barrel', 'Endcap(without Disk4)', 'Endcap(Disk4)',
+                     'W-2', 'W-1', 'W+0', 'W+1', 'W+2',
+                     'RE+1', 'RE+2', 'RE+3', 'RE+4',
+                     'RE-1', 'RE-2', 'RE-3', 'RE-4',]
+
+    for idx in range(len(regions)):
+        if value == 'bx':
+            plot_hist1d_bx_region(
+                region = regions[idx],
+                region_label = region_labels[idx],
+                data_list = data_list,
+                data_label_list = data_label_list,
+                label = label,
+                com = com,
+                log_scale = log_scale,
+                output_dir = output_dir,
+            )
+        elif value == 'cls':
+            plot_hist1d_cls_region(
+                region = regions[idx],
+                region_label = region_labels[idx],
+                data_list = data_list,
+                data_label_list = data_label_list,
+                label = label,
+                com = com,
+                log_scale = log_scale,
+                output_dir = output_dir,
+            )
+        elif value == 'residual_x':
+            plot_hist1d_residual_x(
+                region = regions[idx],
+                region_label = region_labels[idx],
+                data_list = data_list,
+                data_label_list = data_label_list,
+                label = label,
+                com = com,
+                log_scale = log_scale,
+                output_dir = output_dir,
+            )
+        
+
+
+
+
+
