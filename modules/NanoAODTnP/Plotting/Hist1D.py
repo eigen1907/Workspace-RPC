@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from typing import Optional, Union
 from matplotlib.colors import LogNorm
+from matplotlib.patches import Rectangle
 
 from NanoAODTnP.RPCGeometry.RPCGeomServ import get_segment, get_roll_name
 
@@ -24,8 +25,9 @@ def load_data(
     ##     'dimuon_pt', 'dimuon_mass', 
     ##     'residual_x', 'residual_y', 'pull_x', 'pull_y', 'pull_x_v2', 'pull_y_v2', 
     ######################################################################################
-    roll_info = ['region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll', 'is_fiducial', 'is_matched']
-    data = uproot.open(f"{str(input_path)}:tree").arrays(columns + roll_info, library='np')
+    default_columns = ['region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll', 
+                       'is_fiducial', 'is_matched']
+    data = uproot.open(f'{str(input_path)}:tree').arrays(columns + default_columns, library='np')
     
     fiducial_mask = data['is_fiducial']
     matched_mask = data['is_matched']
@@ -57,10 +59,10 @@ def load_data(
 def get_region_param(
     region: str
 ) -> dict:
-    facecolors = {'all': ["#8EFFF9", "#00AEC9"],
+    facecolors = {'all': ['#8EFFF9', '#00AEC9'],
                   'barrel': ['#d3f5e4', '#21bf70'],
-                  'disk123': ["#7CA1FF", "#0714FF"],
-                  'disk4': ["#FF6666", "#FF3300"]}
+                  'disk123': ['#7CA1FF', '#0714FF'],
+                  'disk4': ['#FF6666', '#FF3300']}
     
     edgecolors = {'all': ['#005F77', '#005F77'],
                   'barrel': ['#007700', '#007700'],
@@ -69,19 +71,19 @@ def get_region_param(
     
     hatch = ['///', None]
 
-    if region == "all":
+    if region == 'all':
         is_region = np.vectorize(lambda item: type(item) is str)
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
-    elif region == "barrel":
+    elif region == 'barrel':
         is_region = np.vectorize(lambda item: item.startswith('W'))
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
-    elif region == "disk123":
+    elif region == 'disk123':
         is_region = np.vectorize(lambda item: item.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')))
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
-    elif region == "disk4":
+    elif region == 'disk4':
         is_region = np.vectorize(lambda item: item.startswith(('RE+4', 'RE-4')))
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
@@ -112,7 +114,7 @@ def plot_hist1d_cls_region(
     region_label: str,
     data_list: list,
     data_label_list: list,
-    label: str = "Work in Progress",
+    label: str = 'Work in Progress',
     com: float = 13.6,
     log_scale: bool = False,
     output_dir: Path = Path.cwd(),
@@ -120,46 +122,198 @@ def plot_hist1d_cls_region(
     region_param = get_region_param(region)
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize=(16, 10))
-    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f"{region_label}", fontsize=30)
+    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30)
     ax.set_xlabel('Cluster Size', fontsize=24)
-    ax.set_ylabel('Nomalized', fontsize=24)
+    ax.set_ylabel('Number of Hits', fontsize=24)
     ax.set_xlim(0.5, 10.5)
     ax.set_xticks([x for x in range(1, 11)])
-    ax.set_ylim(0, 0.65)
+    #ax.set_ylim(0, 0.65)
     if log_scale == True: 
         ax.set_yscale('log')    
+
+    extra = Rectangle((0, 0), 0.1, 0.1, fc='w', fill=False, edgecolor='none', linewidth=0)
+    handle_patch_col, handle_label_col, handle_mean_col = [extra], [extra], [extra]
+    value_patch_col, value_label_col, value_mean_col = [''], ['Data'], ['Mean']
     for idx in range(len(data_list)):
         region_mask = region_param['is_region'](data_list[idx]['roll_name'])
         region_data = {}
         for key, values in data_list[idx].items():
             region_data[key] = data_list[idx][key][region_mask]
-    
-        hist, bins = np.histogram(region_data['cls'], bins = 11, range = (0, 11))
-        mh.histplot(
-            hist,
-            bins = bins - 0.5,
-            ax = ax,
-            yerr = False,
-            histtype = "fill",
+
+        data = region_data['cls'][region_data['cls'] > 0]
+        count, bins, patch = ax.hist(
+            data, bins = 11, range = (0, 11),
             facecolor = region_param['facecolor'][idx],
             edgecolor = region_param['edgecolor'][idx],
-            linewidth = 1.6,
-            flow = None,
-            label = f"{data_label_list[idx]}",
-            alpha = 0.5,
             hatch = region_param['hatch'][idx],
-            density = True,
+            linewidth = 1.6,
+            alpha = 0.5,
+            histtype = 'stepfilled',
+            align = 'left',
+            #density = True
         )
+        handle_patch_col.append(patch[0])
+        value_patch_col.append('')
 
-    legend = ax.legend(loc=(0.975, 0.925), #xycoords='axes fraction', 
-                       fontsize=14, alignment='right')
-
-    ax.annotate(f"{np.mean(region_data['cls']) : .3f}", xy=(0.875, 0.925),
-                xycoords='axes fraction', fontsize=14, alignment='right')
+        handle_label_col.append(extra)
+        value_label_col.append(data_label_list[idx])
+        
+        handle_mean_col.append(extra)
+        value_mean_col.append(f'{np.mean(data) : .2f}')
+    
+    legend_handle = handle_patch_col + handle_label_col + handle_mean_col
+    legend_value = value_patch_col + value_label_col + value_mean_col
+    ax.legend(
+        legend_handle, legend_value,
+        ncol = 3, columnspacing = 0.0,
+        handletextpad = 0.0, handlelength = 1.0,
+        alignment = 'right', loc = 'upper right',
+        fontsize = 24,
+    )
 
     if not output_dir.exists():
         output_dir.mkdir(parents=True)
-    fig.savefig(output_dir / f"hist1d-cls-{region}.png")
+    fig.savefig(output_dir / f'hist1d-cls-{region}.png')
+
+
+def plot_hist1d_bx_region(
+    region: str,
+    region_label: str,
+    data_list: list,
+    data_label_list: list,
+    label: str = 'Work in Progress',
+    com: float = 13.6,
+    log_scale: bool = False,
+    output_dir: Path = Path.cwd(),
+):
+    region_param = get_region_param(region)
+    mh.style.use(mh.styles.CMS)
+    fig, ax = plt.subplots(figsize=(16, 10))
+    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30)
+    ax.set_xlabel('Bunch Crossing', fontsize=24)
+    ax.set_ylabel('Number of Hits', fontsize=24)
+    ax.set_xlim(-6.5, 6.5)
+    ax.set_xticks([x for x in range(-6, 7)])
+    #ax.set_ylim(0, 0.65)
+    if log_scale == True: 
+        ax.set_yscale('log')    
+
+    extra = Rectangle((0, 0), 0.1, 0.1, fc='w', fill=False, edgecolor='none', linewidth=0)
+    handle_patch_col, handle_label_col, handle_mean_col, handle_std_col = [extra], [extra], [extra], [extra]
+    value_patch_col, value_label_col, value_mean_col, value_std_col = [''], ['Data'], ['Mean'], ['Std']
+    for idx in range(len(data_list)):
+        region_mask = region_param['is_region'](data_list[idx]['roll_name'])
+        region_data = {}
+        for key, values in data_list[idx].items():
+            region_data[key] = data_list[idx][key][region_mask]
+
+        data = region_data['bx'][region_data['bx'] > -100]
+        count, bins, patch = ax.hist(
+            data, bins = 13, range = (-6, 7),
+            facecolor = region_param['facecolor'][idx],
+            edgecolor = region_param['edgecolor'][idx],
+            hatch = region_param['hatch'][idx],
+            linewidth = 1.6,
+            alpha = 0.5,
+            histtype = 'stepfilled',
+            align = 'left',
+            #density = True
+        )
+        handle_patch_col.append(patch[0])
+        value_patch_col.append('')
+
+        handle_label_col.append(extra)
+        value_label_col.append(data_label_list[idx])
+        
+        handle_mean_col.append(extra)
+        value_mean_col.append(f'{np.mean(data) : .2f}')
+
+        handle_std_col.append(extra)
+        value_std_col.append(f'{np.std(data) : .2f}')
+    
+    legend_handle = handle_patch_col + handle_label_col + handle_mean_col + handle_std_col
+    legend_value = value_patch_col + value_label_col + value_mean_col + value_std_col
+    ax.legend(
+        legend_handle, legend_value,
+        ncol = 4, columnspacing = 0.0,
+        handletextpad = 0.0, handlelength = 1.0,
+        alignment = 'right', loc = 'upper right',
+        fontsize = 24,
+    )
+
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
+    fig.savefig(output_dir / f'hist1d-bx-{region}.png')
+
+
+def plot_hist1d_residual_x_region(
+    region: str,
+    region_label: str,
+    data_list: list,
+    data_label_list: list,
+    label: str = 'Work in Progress',
+    com: float = 13.6,
+    log_scale: bool = False,
+    output_dir: Path = Path.cwd(),
+):
+    region_param = get_region_param(region)
+    mh.style.use(mh.styles.CMS)
+    fig, ax = plt.subplots(figsize=(16, 10))
+    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30)
+    ax.set_xlabel('Residual in Local x [cm]', fontsize=24)
+    ax.set_ylabel('Number of Hits', fontsize=24)
+    ax.set_xlim(-30, 30)
+    #ax.set_xticks([x for x in range(-6, 7)])
+    #ax.set_ylim(0, 0.65)
+    if log_scale == True: 
+        ax.set_yscale('log')    
+
+    extra = Rectangle((0, 0), 0.1, 0.1, fc='w', fill=False, edgecolor='none', linewidth=0)
+    handle_patch_col, handle_label_col, handle_mean_col, handle_std_col = [extra], [extra], [extra], [extra]
+    value_patch_col, value_label_col, value_mean_col, value_std_col = [''], ['Data'], ['Mean'], ['Std']
+    for idx in range(len(data_list)):
+        region_mask = region_param['is_region'](data_list[idx]['roll_name'])
+        region_data = {}
+        for key, values in data_list[idx].items():
+            region_data[key] = data_list[idx][key][region_mask]
+
+        data = region_data['residual_x'][region_data['residual_x'] > -300]
+        count, bins, patch = ax.hist(
+            data, bins = 200, range = (-50, 50),
+            facecolor = region_param['facecolor'][idx],
+            edgecolor = region_param['edgecolor'][idx],
+            hatch = region_param['hatch'][idx],
+            linewidth = 1.6,
+            alpha = 0.5,
+            histtype = 'stepfilled',
+            #align = 'left',
+            #density = True
+        )
+        handle_patch_col.append(patch[0])
+        value_patch_col.append('')
+
+        handle_label_col.append(extra)
+        value_label_col.append(data_label_list[idx])
+        
+        handle_mean_col.append(extra)
+        value_mean_col.append(f'{np.mean(data) : .2f}')
+    
+        handle_std_col.append(extra)
+        value_std_col.append(f'{np.std(data) : .2f}')
+    
+    legend_handle = handle_patch_col + handle_label_col + handle_mean_col + handle_std_col
+    legend_value = value_patch_col + value_label_col + value_mean_col + value_std_col
+    ax.legend(
+        legend_handle, legend_value,
+        ncol = 4, columnspacing = 0.0,
+        handletextpad = 0.0, handlelength = 1.0,
+        alignment = 'center', loc = 'upper right',
+        fontsize = 24,
+    )
+
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
+    fig.savefig(output_dir / f'hist1d-residual_x-{region}.png')
 
 
 def plot_hist1d(
@@ -179,15 +333,6 @@ def plot_hist1d(
             roll_blacklist_path = roll_blacklist_path_list[idx],
             columns = [value]
         )
-        if value == 'bx':
-            value_mask = data[value] > -100
-        elif value == 'cls':
-            value_mask = data[value] > 0
-        elif value == 'residual_x':
-            value_mask = data[value] > -300
-
-        for key, values in data.items():
-            data[key] = data[key][value_mask]
         data_list.append(data)
 
     regions = ['all', 'barrel', 'disk123', 'disk4',
@@ -224,7 +369,7 @@ def plot_hist1d(
                 output_dir = output_dir,
             )
         elif value == 'residual_x':
-            plot_hist1d_residual_x(
+            plot_hist1d_residual_x_region(
                 region = regions[idx],
                 region_label = region_labels[idx],
                 data_list = data_list,
