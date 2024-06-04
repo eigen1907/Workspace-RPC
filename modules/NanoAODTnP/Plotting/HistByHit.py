@@ -12,7 +12,7 @@ from matplotlib.patches import Rectangle
 from NanoAODTnP.RPCGeometry.RPCGeomServ import get_segment, get_roll_name
 
 
-def load_data(
+def load_filtered_tree(
     input_path: Path,
     columns: list,
     roll_blacklist_path: Optional[Path] = None,
@@ -71,36 +71,36 @@ def get_region_param(
     
     hatch = ['///', None]
 
-    if region == 'all':
+    if region is 'all':
         is_region = np.vectorize(lambda item: type(item) is str)
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
-    elif region == 'barrel':
+    elif region is 'barrel':
         is_region = np.vectorize(lambda item: item.startswith('W'))
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
-    elif region == 'disk123':
+    elif region is 'disk123':
         is_region = np.vectorize(lambda item: item.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')))
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
-    elif region == 'disk4':
+    elif region is 'disk4':
         is_region = np.vectorize(lambda item: item.startswith(('RE+4', 'RE-4')))
         facecolor = facecolors[region]
         edgecolor = edgecolors[region]
+    
+    is_region = np.vectorize(lambda item: item.startswith(region))
+    if region.startswith('W'):
+        facecolor = facecolors['barrel']
+        edgecolor = edgecolors['barrel']
+    elif region.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')):
+        facecolor = facecolors['disk123']
+        edgecolor = edgecolors['disk123']
+    elif region.startswith(('RE+4', 'RE-4')):
+        facecolor = facecolors['disk4']
+        edgecolor = edgecolors['disk4']
     else:
-        is_region = np.vectorize(lambda item: item.startswith(region))
-        if region.startswith('W'):
-            facecolor = facecolors['barrel']
-            edgecolor = edgecolors['barrel']
-        elif region.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')):
-            facecolor = facecolors['disk123']
-            edgecolor = edgecolors['disk123']
-        elif region.startswith(('RE+4', 'RE-4')):
-            facecolor = facecolors['disk4']
-            edgecolor = edgecolors['disk4']
-        else:
-            facecolor = facecolors['all']
-            edgecolor = edgecolors['all']
+        facecolor = facecolors['all']
+        edgecolor = edgecolors['all']
 
     region_param = {'is_region': is_region,
                     'facecolor': facecolor,
@@ -109,7 +109,7 @@ def get_region_param(
     return region_param
 
 
-def plot_hist1d_cls_region(
+def hist_cls(
     region: str,
     region_label: str,
     data_list: list,
@@ -122,7 +122,7 @@ def plot_hist1d_cls_region(
     region_param = get_region_param(region)
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize=(16, 10))
-    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30)
+    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30, loc=1)
     ax.set_xlabel('Cluster Size', fontsize=24)
     ax.set_ylabel('Number of Hits', fontsize=24)
     ax.set_xlim(0.5, 10.5)
@@ -176,7 +176,7 @@ def plot_hist1d_cls_region(
     fig.savefig(output_dir / f'hist1d-cls-{region}.png')
 
 
-def plot_hist1d_bx_region(
+def hist_bx(
     region: str,
     region_label: str,
     data_list: list,
@@ -189,7 +189,7 @@ def plot_hist1d_bx_region(
     region_param = get_region_param(region)
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize=(16, 10))
-    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30)
+    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30, loc=1)
     ax.set_xlabel('Bunch Crossing', fontsize=24)
     ax.set_ylabel('Number of Hits', fontsize=24)
     ax.set_xlim(-6.5, 6.5)
@@ -246,7 +246,7 @@ def plot_hist1d_bx_region(
     fig.savefig(output_dir / f'hist1d-bx-{region}.png')
 
 
-def plot_hist1d_residual_x_region(
+def hist_residual_x(
     region: str,
     region_label: str,
     data_list: list,
@@ -259,7 +259,7 @@ def plot_hist1d_residual_x_region(
     region_param = get_region_param(region)
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize=(16, 10))
-    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30)
+    mh.cms.label(ax=ax, data=True, label=label, com=com, year=f'{region_label}', fontsize=30, loc=1)
     ax.set_xlabel('Residual in Local x [cm]', fontsize=24)
     ax.set_ylabel('Number of Hits', fontsize=24)
     ax.set_xlim(-30, 30)
@@ -316,7 +316,7 @@ def plot_hist1d_residual_x_region(
     fig.savefig(output_dir / f'hist1d-residual_x-{region}.png')
 
 
-def plot_hist1d(
+def hist_by_hit(
     value: str, # 'bx', 'cls', 'residual_x'
     data_path_list: list[Path],
     data_label_list: list[str],
@@ -328,7 +328,7 @@ def plot_hist1d(
 ):
     data_list = []
     for idx in range(len(data_path_list)):
-        data = load_data(
+        data = load_filtered_tree(
             input_path = data_path_list[idx],
             roll_blacklist_path = roll_blacklist_path_list[idx],
             columns = [value]
@@ -347,7 +347,7 @@ def plot_hist1d(
 
     for idx in range(len(regions)):
         if value == 'bx':
-            plot_hist1d_bx_region(
+            hist_bx(
                 region = regions[idx],
                 region_label = region_labels[idx],
                 data_list = data_list,
@@ -358,7 +358,7 @@ def plot_hist1d(
                 output_dir = output_dir,
             )
         elif value == 'cls':
-            plot_hist1d_cls_region(
+            hist_cls(
                 region = regions[idx],
                 region_label = region_labels[idx],
                 data_list = data_list,
@@ -369,7 +369,7 @@ def plot_hist1d(
                 output_dir = output_dir,
             )
         elif value == 'residual_x':
-            plot_hist1d_residual_x_region(
+            hist_residual_x(
                 region = regions[idx],
                 region_label = region_labels[idx],
                 data_list = data_list,
@@ -380,8 +380,3 @@ def plot_hist1d(
                 output_dir = output_dir,
             )
         
-
-
-
-
-
