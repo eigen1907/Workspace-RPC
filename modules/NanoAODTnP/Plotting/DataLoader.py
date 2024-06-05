@@ -5,6 +5,7 @@ import math
 import copy
 import mplhep as mh
 import matplotlib.pyplot as plt
+import pandas as pd
 from pathlib import Path
 from typing import Optional, Union, List, Dict
 
@@ -14,16 +15,19 @@ from NanoAODTnP.RPCGeometry.RPCGeomServ import get_segment, get_roll_name
 class DataLoader:
     def __init__(
         self, 
-        input_path: Path, 
+        input_path: Path,
+        geom_path: Path,
         roll_blacklist_path: Optional[Path] = None,
-        keys: list = [],
+        var: list = [],
     ):
         self.input_path = input_path
+        self.geom = pd.read_csv(geom_path)
         self.roll_blacklist = self.load_blacklist(roll_blacklist_path)
-        self.keys = keys
+        self.var = var
         self.tree = self.load_tree()
-        self.total = uproot.open(f'{self.input_path}:total').to_hist()
-        self.passed = uproot.open(f'{self.input_path}:passed').to_hist()
+        self.roll_names = self.load_roll_names()
+        self.total = self.load_count('total')
+        self.passed = self.load_count('passed')
         self.region = 'All'
         self.facecolors = ['#8EFFF9', '#00AEC9']
         self.edgecolors = ['#005F77', '#005F77']
@@ -36,17 +40,37 @@ class DataLoader:
             return set(json.load(stream))
 
     def load_tree(self) -> dict:
-        input_keys = self.keys + ['region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll', 'is_fiducial', 'is_matched']
-        tree = uproot.open(f'{self.input_path}:tree').arrays(input_keys, library='np')
+        input_var = self.var + ['region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll', 'is_fiducial', 'is_matched']
+        tree = uproot.open(f'{self.input_path}:tree').arrays(input_var, library='np')
         tree['roll_name'] = np.array([
             get_roll_name(tree['region'][i], tree['ring'][i], tree['station'][i],
                           tree['sector'][i], tree['layer'][i], tree['subsector'][i], tree['roll'][i])
             for i in range(len(tree['region']))
         ])
-        self.keys = self.keys + ['is_fiducial', 'is_matched', 'roll_name']
-        for id_key in ['region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll']:
-            tree.pop(id_key)
+        self.var = self.var + ['is_fiducial', 'is_matched', 'roll_name']
+        for id_var in ['region', 'ring', 'station', 'sector', 'layer', 'subsector', 'roll']:
+            tree.pop(id_var)
         return tree
+
+    def load_roll_names(self, is_region: Optional[np.vectorize] = None, linked: bool = False) -> np.ndarray:
+        roll_names = np.unique(self.geom['roll_name'])  
+
+        is_iRPC = np.vectorize(lambda item: item in {"RE+4_R1_CH15_A", "RE+4_R1_CH16_A", "RE+3_R1_CH15_A", "RE+3_R1_CH16_A"})
+        mask = ~is_iRPC(roll_names)
+        if is_region is not None:
+            region_mask = is_region(roll_names)
+            mask = mask & region_mask
+        if linked == True:
+            is_linked = np.vectorize(lambda item: item not in self.roll_blacklist)
+            link_mask = is_linked(roll_names)
+            mask = mask & link_mask
+
+        return roll_names[mask]
+
+    def load_count(self, which:str = 'total') -> np.ndarray:
+        hist = uproot.open(f'{self.input_path}:{which}').to_hist()
+        count = hist[self.roll_names.tolist()].values()
+        return count
 
     def get_mask(self, key: str) -> np.ndarray:
         mask = True
@@ -58,7 +82,7 @@ class DataLoader:
             mask = np.vectorize(lambda name: name not in self.roll_blacklist)(self.tree['roll_name'])
         return mask
 
-    def region_params(self, region: str) -> dict:
+    def get_region_params(self, region: str) -> dict:
         facecolor_table = {'All': ['#8EFFF9', '#00AEC9'],
                            'Barrel': ['#d3f5e4', '#21bf70'],
                            'Disk123': ['#7CA1FF', '#0714FF'],
@@ -107,22 +131,23 @@ class DataLoader:
             'hatches': hatches
         }
 
-    def filter_tree(self, keys: Union[str, list], region='All') -> dict:
-        mask = None
+    def filter_data(self, keys: Optional[Union[str, list]] = None, region = 'All') -> dict:
+        # keys: ['is_matched', 'is_fiducial', 'is_linked']
+        mask = self.get_region_params(region)['is_region'](self.tree['roll_name'])
         if type(keys) is str:
-            mask = self.get_mask(keys)
+            mask = mask & self.get_mask(keys)
         elif type(keys) is list:
             for key in keys:
-                if mask is None:
-                    mask = self.get_mask(key)
                 mask = mask & self.get_mask(key)
-        
-        mask = mask & self.region_params(region)['is_region'](self.tree['roll_name'])
 
         filtered_data = copy.deepcopy(self)
-        filtered_data.tree = {key: values[mask] for key, values in self.tree.items()}
-        filtered_data.region = region
-        filtered_data.facecolors = self.region_params(region)['facecolors']
-        filtered_data.edgecolors = self.region_params(region)['edgecolors']
-        filtered_data.hatches = self.region_params(region)['hatches']
+        filtered_data.tree = {key: values[mask] for key, values in filtered_data.tree.items()}
+        if 'is_linked' in keys:
+            filtered_data.roll_names = filtered_data.load_roll_names(filtered_data.get_region_params(region)['is_region'], linked = True)
+        filtered_data.roll_names = filtered_data.load_roll_names(filtered_data.get_region_params(region)['is_region'], linked = True)
+        filtered_data.total = filtered_data.load_count('total')
+        filtered_data.passed = filtered_data.load_count('passed')
+        filtered_data.facecolors = filtered_data.get_region_params(region)['facecolors']
+        filtered_data.edgecolors = filtered_data.get_region_params(region)['edgecolors']
+        filtered_data.hatches = filtered_data.get_region_params(region)['hatches']
         return filtered_data
