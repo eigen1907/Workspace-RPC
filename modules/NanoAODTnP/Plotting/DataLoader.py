@@ -106,6 +106,10 @@ class DataLoader:
             facecolors = facecolor_table[region]
             edgecolors = edgecolor_table[region]
             is_region = np.vectorize(lambda item: item.startswith('W'))
+        elif region == 'Endcap':
+            facecolors = facecolor_table['Disk123']
+            edgecolors = edgecolor_table['Disk123']
+            is_region = np.vectorize(lambda item: item.startswith('RE'))
         elif region == 'Disk123':
             facecolors = facecolor_table[region]
             edgecolors = edgecolor_table[region]
@@ -131,7 +135,7 @@ class DataLoader:
             'hatches': hatches
         }
 
-    def filter_data(self, keys: Optional[Union[str, list]] = None, region = 'All') -> dict:
+    def filter_data(self, keys: Union[str, list] = [], region = 'All') -> dict:
         # keys: ['is_matched', 'is_fiducial', 'is_linked']
         mask = self.get_region_params(region)['is_region'](self.tree['roll_name'])
         if type(keys) is str:
@@ -144,9 +148,12 @@ class DataLoader:
         filtered_data.tree = {key: values[mask] for key, values in filtered_data.tree.items()}
         if 'is_linked' in keys:
             filtered_data.roll_names = filtered_data.load_roll_names(filtered_data.get_region_params(region)['is_region'], linked = True)
-        filtered_data.roll_names = filtered_data.load_roll_names(filtered_data.get_region_params(region)['is_region'], linked = True)
+        else:
+            filtered_data.roll_names = filtered_data.load_roll_names(filtered_data.get_region_params(region)['is_region'])
+
         filtered_data.total = filtered_data.load_count('total')
         filtered_data.passed = filtered_data.load_count('passed')
+        filtered_data.region = region
         filtered_data.facecolors = filtered_data.get_region_params(region)['facecolors']
         filtered_data.edgecolors = filtered_data.get_region_params(region)['edgecolors']
         filtered_data.hatches = filtered_data.get_region_params(region)['hatches']

@@ -13,9 +13,11 @@ def convert_file(input_filename, output_filename):
         if len(parts) == 2:
             formatted_list.append(parts[1])
 
+    formatted_list.sort()
+
     # Write the result to a JSON file
     with open(output_filename, 'w') as file:
-        json.dump(formatted_list, file, indent=2)
+        json.dump(formatted_list, file, indent=4)
 
     print(f"Data has been successfully written to {output_filename}")
 
