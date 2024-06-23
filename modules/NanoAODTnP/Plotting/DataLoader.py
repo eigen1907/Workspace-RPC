@@ -18,11 +18,13 @@ class DataLoader:
         input_path: Path,
         geom_path: Path,
         roll_blacklist_path: Optional[Path] = None,
+        run_blacklist_path: Optional[Path] = None,
         var: list = [],
     ):
         self.input_path = input_path
         self.geom = pd.read_csv(geom_path)
-        self.roll_blacklist = self.load_blacklist(roll_blacklist_path)
+        self.roll_blacklist = self.load_roll_blacklist(roll_blacklist_path)
+        self.run_blacklist = self.load_run_blacklist(run_blacklist_path)
         self.var = var
         self.tree = self.load_tree()
         self.roll_names = self.load_roll_names()
@@ -33,10 +35,16 @@ class DataLoader:
         self.edgecolors = ['#005F77', '#005F77']
         self.hatches = ['///', None]
 
-    def load_blacklist(self, roll_blacklist_path: Optional[Path]) -> set:
+    def load_roll_blacklist(self, roll_blacklist_path: Optional[Path]) -> set:
         if roll_blacklist_path is None:
             return set()
         with open(roll_blacklist_path) as stream:
+            return set(json.load(stream))
+    
+    def load_run_blacklist(self, run_blacklist_path: Optional[Path]) -> set:
+        if run_blacklist_path is None:
+            return set()
+        with open(run_blacklist_path) as stream:
             return set(json.load(stream))
 
     def load_tree(self) -> dict:
@@ -80,6 +88,8 @@ class DataLoader:
             mask = self.tree['is_matched']
         if key == 'is_linked':
             mask = np.vectorize(lambda name: name not in self.roll_blacklist)(self.tree['roll_name'])
+        if key == 'is_safetime':
+            mask = np.vectorize(lambda run: str(run) not in self.run_blacklist)(self.tree['run'])
         return mask
 
     def get_region_params(self, region: str) -> dict:
@@ -136,7 +146,7 @@ class DataLoader:
         }
 
     def filter_data(self, keys: Union[str, list] = [], region = 'All') -> dict:
-        # keys: ['is_matched', 'is_fiducial', 'is_linked']
+        # keys: ['is_matched', 'is_fiducial', 'is_linked', 'is_safetime']
         mask = self.get_region_params(region)['is_region'](self.tree['roll_name'])
         if type(keys) is str:
             mask = mask & self.get_mask(keys)

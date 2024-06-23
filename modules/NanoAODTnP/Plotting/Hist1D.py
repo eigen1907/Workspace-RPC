@@ -18,6 +18,7 @@ def init_figure(
     com: float = 13.6,
     label1: str = 'Work in Progress',
     label2: Optional[str] = None,
+    mid_label: Optional[str] = None,
     loc: int = 2,
     xlabel: Optional[str] = None,
     ylabel: Optional[str] = None,
@@ -33,6 +34,9 @@ def init_figure(
                  year = label2, com = com, fontsize = fontsize)
     ax.set_xlabel(xlabel, fontsize = fontsize)
     ax.set_ylabel(ylabel, fontsize = fontsize)
+    if mid_label is not None:
+        ax.annotate(mid_label, (0.50, 1.015), #weight='bold',
+                    xycoords='axes fraction', fontsize=fontsize, horizontalalignment='center')
     if xlim is not None:
         ax.set_xlim(xlim)
     if ylim is not None:    
