@@ -143,4 +143,5 @@ def eff_hist(data1, data2, output_path):
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
     fig.savefig(output_path)
+    plt.close(fig)
     return [eff1, eff2]
