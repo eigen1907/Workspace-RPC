@@ -28,8 +28,8 @@ class DataLoader:
         self.var = var
         self.tree = self.load_tree()
         self.roll_names = self.load_roll_names()
-        self.total = self.load_count('total')
-        self.passed = self.load_count('passed')
+        self.total_by_roll = self.load_count('total_by_roll')
+        self.passed_by_roll = self.load_count('passed_by_roll')
         self.region = 'All'
         self.facecolors = ['#8EFFF9', '#00AEC9']
         self.edgecolors = ['#005F77', '#005F77']
@@ -75,7 +75,7 @@ class DataLoader:
 
         return roll_names[mask]
 
-    def load_count(self, which:str = 'total') -> np.ndarray:
+    def load_count(self, which:str = 'total_by_roll') -> np.ndarray:
         hist = uproot.open(f'{self.input_path}:{which}').to_hist()
         count = hist[self.roll_names.tolist()].values()
         return count
@@ -161,8 +161,8 @@ class DataLoader:
         else:
             filtered_data.roll_names = filtered_data.load_roll_names(filtered_data.get_region_params(region)['is_region'])
 
-        filtered_data.total = filtered_data.load_count('total')
-        filtered_data.passed = filtered_data.load_count('passed')
+        filtered_data.total = filtered_data.load_count('total_by_roll')
+        filtered_data.passed = filtered_data.load_count('passed_by_roll')
         filtered_data.region = region
         filtered_data.facecolors = filtered_data.get_region_params(region)['facecolors']
         filtered_data.edgecolors = filtered_data.get_region_params(region)['edgecolors']

@@ -11,16 +11,27 @@ import json
 from NanoAODTnP.RPCGeometry.RPCGeomServ import get_roll_name
 from NanoAODTnP.Analysis.LumiBlockChecker import LumiBlockChecker
 
-def get_blacklist_mask(arr_var: np.ndarray,
-                       blacklist_path: str,
+def get_roll_blacklist_mask(roll_name: np.ndarray,
+                            roll_blacklist_path: str,
 ):
-    if blacklist_path is None:
-        blacklist = set()
-    with open(blacklist_path) as stream:
-        blacklist = set(json.load(stream))
+    if roll_blacklist_path is None:
+        roll_blacklist = set()
+    with open(roll_blacklist_path) as stream:
+        roll_blacklist = set(json.load(stream))
 
-    blacklist_mask = np.vectorize(lambda var: var not in blacklist)(arr_var)
-    return blacklist_mask
+    roll_blacklist_mask = np.vectorize(lambda roll: roll not in roll_blacklist)(roll_name)
+    return roll_blacklist_mask
+
+def get_run_blacklist_mask(run: np.ndarray,
+                           run_blacklist_path: str,      
+):
+    if run_blacklist_path is None:
+        run_blacklist = set()
+    with open(run_blacklist_path) as stream:
+        run_blacklist = set(json.load(stream))
+
+    run_blacklist_mask = np.vectorize(lambda run: run not in run_blacklist)(run)
+    return run_blacklist_mask
 
 def read_nanoaod(path,
                  cert_path: str,
@@ -81,23 +92,24 @@ def flatten_nanoaod(input_path: Path,
         for i in range(len(data['region']))
     ])
 
-    mask = np.ones(data['roll_name'].shape, dtype=bool)
+    #mask = np.ones(data['is_matched'].shape, dtype=bool)
+    mask = np.vectorize(lambda roll: roll not in {"RE+4_R1_CH15_A", "RE+4_R1_CH16_A", "RE+3_R1_CH15_A", "RE+3_R1_CH16_A"})(data['roll_name'])
 
     if run_blacklist_path is not None:
-        mask = mask & get_blacklist_mask(
-            arr_var = data['run'],
-            blacklist_path = run_blacklist_path,
+        mask = mask & get_run_blacklist_mask(
+            run = data['run'],
+            run_blacklist_path = run_blacklist_path,
         )
     if roll_blacklist_path is not None:
-        mask = mask & get_blacklist_mask(
-            arr_var = data['roll_name'],
-            blacklist_path = roll_blacklist_path,
+        mask = mask & get_roll_blacklist_mask(
+            roll_name = data['roll_name'],
+            roll_blacklist_path = roll_blacklist_path,
         )
     
     data = {key: value[mask] for key, value in data.items()}
 
     geom = pd.read_csv(geom_path)
-    roll_axis = StrCategory(geom['roll_name'].tolist())
+    roll_axis = StrCategory(np.unique(data['roll_name']))
     
     h_total_by_roll = Hist(roll_axis) # type: ignore
     h_passed_by_roll = h_total_by_roll.copy()
