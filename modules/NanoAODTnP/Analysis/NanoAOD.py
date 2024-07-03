@@ -74,6 +74,7 @@ def read_nanoaod(path,
 def flatten_nanoaod(input_path: Path,
                     cert_path: Path,
                     geom_path: Path,
+                    run_path: Path,
                     output_path: Path,
                     roll_blacklist_path: Optional[str] = None,
                     run_blacklist_path: Optional[str] = None,
@@ -109,14 +110,17 @@ def flatten_nanoaod(input_path: Path,
     data = {key: value[mask] for key, value in data.items()}
 
     geom = pd.read_csv(geom_path)
-    roll_axis = StrCategory(np.unique(data['roll_name']))
+    roll_axis = StrCategory(geom['roll_name'].tolist())
+    #roll_axis = StrCategory(np.unique(data['roll_name']))
     
     h_total_by_roll = Hist(roll_axis) # type: ignore
     h_passed_by_roll = h_total_by_roll.copy()
     h_total_by_roll.fill(data['roll_name'][data['is_fiducial']])
     h_passed_by_roll.fill(data['roll_name'][data['is_fiducial'] & data['is_matched']])
 
-    run_axis = IntCategory(np.unique(data['run']))
+    run = pd.read_csv(run_path)
+    run_axis = IntCategory(run['run'].tolist())
+    #run_axis = IntCategory(np.unique(data['run']))
     h_total_by_run = Hist(run_axis)
     h_passed_by_run = h_total_by_run.copy()
     h_total_by_run.fill(data['run'][data['is_fiducial']])
