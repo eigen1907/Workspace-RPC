@@ -22,15 +22,15 @@ def get_roll_blacklist_mask(roll_name: np.ndarray,
     roll_blacklist_mask = np.vectorize(lambda roll: roll not in roll_blacklist)(roll_name)
     return roll_blacklist_mask
 
-def get_run_blacklist_mask(run: np.ndarray,
+def get_run_blacklist_mask(runs: np.ndarray,
                            run_blacklist_path: str,      
 ):
     if run_blacklist_path is None:
         run_blacklist = set()
     with open(run_blacklist_path) as stream:
-        run_blacklist = set(json.load(stream))
+        run_blacklist = set((json.load(stream)))
 
-    run_blacklist_mask = np.vectorize(lambda run: run not in run_blacklist)(run)
+    run_blacklist_mask = np.vectorize(lambda run: run not in run_blacklist)(runs)
     return run_blacklist_mask
 
 def read_nanoaod(path,
@@ -93,12 +93,10 @@ def flatten_nanoaod(input_path: Path,
         for i in range(len(data['region']))
     ])
 
-    #mask = np.ones(data['is_matched'].shape, dtype=bool)
     mask = np.vectorize(lambda roll: roll not in {"RE+4_R1_CH15_A", "RE+4_R1_CH16_A", "RE+3_R1_CH15_A", "RE+3_R1_CH16_A"})(data['roll_name'])
-
     if run_blacklist_path is not None:
         mask = mask & get_run_blacklist_mask(
-            run = data['run'],
+            runs = data['run'],
             run_blacklist_path = run_blacklist_path,
         )
     if roll_blacklist_path is not None:
@@ -106,25 +104,31 @@ def flatten_nanoaod(input_path: Path,
             roll_name = data['roll_name'],
             roll_blacklist_path = roll_blacklist_path,
         )
+
     
     data = {key: value[mask] for key, value in data.items()}
 
     geom = pd.read_csv(geom_path)
     roll_axis = StrCategory(geom['roll_name'].tolist())
-    #roll_axis = StrCategory(np.unique(data['roll_name']))
+    run = pd.read_csv(run_path)
+    run_axis = IntCategory(run['run'].tolist())
     
     h_total_by_roll = Hist(roll_axis) # type: ignore
     h_passed_by_roll = h_total_by_roll.copy()
     h_total_by_roll.fill(data['roll_name'][data['is_fiducial']])
     h_passed_by_roll.fill(data['roll_name'][data['is_fiducial'] & data['is_matched']])
 
-    run = pd.read_csv(run_path)
-    run_axis = IntCategory(run['run'].tolist())
-    #run_axis = IntCategory(np.unique(data['run']))
     h_total_by_run = Hist(run_axis)
     h_passed_by_run = h_total_by_run.copy()
     h_total_by_run.fill(data['run'][data['is_fiducial']])
     h_passed_by_run.fill(data['run'][data['is_fiducial'] & data['is_matched']])
+
+    h_total_by_roll_run = Hist(roll_axis, run_axis)
+    h_passed_by_roll_run = h_total_by_roll_run.copy()
+    h_total_by_roll_run.fill(data['roll_name'][data['is_fiducial']], data['run'][data['is_fiducial']])
+    h_passed_by_roll_run.fill(data['roll_name'][data['is_fiducial'] & data['is_matched']], 
+                              data['run'][data['is_fiducial'] & data['is_matched']])
+
 
     roll_name = data.pop('roll_name')
     data = ak.Array(data)
@@ -134,3 +138,5 @@ def flatten_nanoaod(input_path: Path,
         output_file['passed_by_roll'] = h_passed_by_roll
         output_file['total_by_run'] = h_total_by_run
         output_file['passed_by_run'] = h_passed_by_run
+        output_file['total_by_roll_run'] = h_total_by_roll_run
+        output_file['passed_by_roll_run'] = h_passed_by_roll_run

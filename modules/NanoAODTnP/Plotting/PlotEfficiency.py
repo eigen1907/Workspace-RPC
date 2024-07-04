@@ -112,11 +112,11 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
 
     total_1 = total_by_roll_1.values()
     passed_1 = passed_by_roll_1.values()
-    roll_name_1 = np.array(list(total_by_roll_1.axes[0]))
+    roll_name_1 = np.array(total_by_roll_1.axes[0])
 
     total_2 = total_by_roll_2.values()
     passed_2 = passed_by_roll_2.values()
-    roll_name_2 = np.array(list(total_by_roll_2.axes[0]))
+    roll_name_2 = np.array(total_by_roll_2.axes[0])
 
     eff_1 = np.divide(passed_1, total_1,
                       out = np.zeros_like(total_1),
@@ -232,66 +232,72 @@ def run2time(run, run_info):
         run += 1
     return time
 
-def plot_eff_time(ax, input_path, run_info, region):
-    total_by_run = uproot.open(f'{input_path}:total_by_run').to_list()
-    passed_by_run = uproot.open(f'{input_path}:passed_by_run').to_list()
+def runs2times(runs, run_info):
+    times = []
+    for run in runs:
+        time = run_info['start_time'][run_info['run_number'] == run].values[0]
+        time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+        times.append(time)
+    return np.array(times)
 
-    total = total_by_run.values()
-    passed = passed_by_run.values()
-    runs = np.array(list(total_by_run).axes[0])
+def plot_eff_time(ax, input_path, run_info, region, fix_color=True, alpha=1.0):
+    total_by_roll_run = uproot.open(f'{input_path}:total_by_roll_run').to_hist()
+    passed_by_roll_run = uproot.open(f'{input_path}:passed_by_roll_run').to_hist()
 
-    eff = np.divide(passed, total,
+    total = total_by_roll_run.values()
+    passed = passed_by_roll_run.values()
+
+    roll_name = np.array(total_by_roll_run.axes[0])
+    runs = np.array(total_by_roll_run.axes[1])
+
+    region_params = get_region_params(region)
+    total = np.sum(total[region_params['is_region'](roll_name)], axis=0)
+    passed = np.sum(passed[region_params['is_region'](roll_name)], axis=0)
+
+    runs_mask = (total != 0)
+
+    total = total[runs_mask]
+    passed = passed[runs_mask]
+    runs = runs[runs_mask]
+    times = runs2times(runs, run_info)
+
+    effs = np.divide(passed, total,
                     out = np.zeros_like(total),
                     where = (total > 0)) * 100
-    
-    region_params = get_Region_params
 
-    tree = data.tree 
-    runs = np.unique(tree['run'])
-    times = []
-    effs, err_uppers, err_lowers = [], [], []
-    for run in runs:
-        times.append(run2time(run, run_info))
-        run_mask = (tree['run'] == run)
+    errs = intervals.clopper_pearson_interval(passed, total, 0.68) * 100
 
-        total = tree['is_matched'][run_mask]
-        passed = total[total]
-
-        eff = len(passed) / len(total) * 100
-        err = intervals.clopper_pearson_interval(len(passed), len(total), 0.68) * 100
-        
-        effs.append(eff)
-        err_lowers.append(eff - err[0])
-        err_uppers.append(err[1] - eff)
-        
-        #if len(total) < 1000:
-        #    print(f"Run: {run}, nTotal: {len(total)}, Lower Bound: {err[0]}")
+    lower_limits = effs - errs[0]
+    upper_limits = errs[1] - effs
 
     ax.errorbar(
-        #runs,
         times,
         effs,
-        yerr = (err_lowers, err_uppers),
+        yerr = (lower_limits, upper_limits),
         fmt = 's',
         markersize = 6,
         markerfacecolor = 'none',
         markeredgewidth = 2,
         lw = 2,
         capsize = 4,
-        color = data.facecolors[1],
-        label = data.region,
-        alpha = 1.0
+        color = region_params['facecolors'][1] if fix_color is True else None,
+        label = region,
+        alpha = alpha,
     )
     return ax, effs, runs
 
-def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path):
+def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path, fix_color=True, alpha=1.0):
+    if type(region) is list:
+        mid_label = 'RPC Efficiency'
+    elif type(region) is str:
+        mid_label = f'RPC {region} Efficiency'
     fig, ax = init_figure(
         figsize = (20, 9),
         fontsize = 24,
         com = 13.6,
         label1 = 'Work in Progress',
         label2 = f'2022 Data',
-        mid_label = f'RPC {region}',
+        mid_label = f'{mid_label}',
         loc = 0,
         ylabel = 'Efficiency [%]',
         xlim = None,
@@ -307,7 +313,12 @@ def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path):
     ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2022/01/Dec', '%Y/%d/%b'))
     ax.set_ylim(ymin, ymax)
     
-    ax, effs, runs = plot_eff_time(ax, input_path_2022, run_info, region)
+    if type(region) is list:
+        for i_region in region:
+            ax, effs, runs = plot_eff_time(ax, input_path_2022, run_info, i_region, fix_color, alpha)      
+        ax.legend(loc='center right', fontsize = 28) 
+    elif type(region) is str:
+        ax, effs, runs = plot_eff_time(ax, input_path_2022, run_info, region, fix_color, alpha)
     
     spans = [
         (355100, 355769, 'Run2022B', 'y'),
@@ -319,31 +330,33 @@ def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path):
     ]
     
     for start, end, label, color in spans:
-        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.05)
+        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.1)
         mid_point = run2time((start + end) // 2, run_info)
         ax.text(mid_point, ymin + 15, label, rotation=90, verticalalignment='center', fontsize=22, weight='bold', color=color)
     
     #ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=(1, 15)))
     ax.xaxis.set_major_locator(mdates.MonthLocator())
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
+    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
     ax.grid()
     
-    #ax.legend(loc='center right', fontsize = 28) 
-    if not output_dir.exists():
-        output_dir.mkdir(parents=True)
-    
-    fig.savefig(output_dir / f"{region}.png")
+    if not output_path.parent.exists():
+        output_path.parent.mkdir(parents=True)
+    fig.savefig(output_path)
     plt.close(fig)
 
-
-def plot_eff_by_time_2023(data_2023, region, output_dir):
+def plot_eff_by_time_2023(input_path_2023, run_info_path, region, output_path, fix_color=True, alpha=1.0):
+    if type(region) is list:
+        mid_label = 'RPC Efficiency'
+    elif type(region) is str:
+        mid_label = f'RPC {region} Efficiency'
     fig, ax = init_figure(
         figsize = (20, 9),
         fontsize = 24,
         com = 13.6,
         label1 = 'Work in Progress',
         label2 = f'2023 Data',
-        mid_label = f'RPC {region}',
+        mid_label = f'{mid_label}',
         loc = 0,
         ylabel = 'Efficiency [%]',
         xlim = None,
@@ -352,12 +365,18 @@ def plot_eff_by_time_2023(data_2023, region, output_dir):
         yticks = None,
         log_scale = False,
     )
-    
+    run_info = pd.read_csv(run_info_path, index_col = False)
+
     ymin, ymax = 0, 100
-    ax.set_xlim(datetime.strptime('2023/15/Apr', '%Y/%d/%b'), datetime.strptime('2023/01/Aug', '%Y/%d/%b'))
+    ax.set_xlim(datetime.strptime('2023/01/Apr', '%Y/%d/%b'), datetime.strptime('2023/01/Aug', '%Y/%d/%b'))
     ax.set_ylim(ymin, ymax)
     
-    ax, effs, runs = plot_eff_time(ax, data_2023.filter_data(region = region), run_info)
+    if type(region) is list:
+        for i_region in region:
+            ax, effs, runs = plot_eff_time(ax, input_path_2023, run_info, i_region, fix_color, alpha)     
+        ax.legend(loc='center right', fontsize = 28) 
+    elif type(region) is str:
+        ax, effs, runs = plot_eff_time(ax, input_path_2023, run_info, region, fix_color, alpha)
     
     spans = [
         (366403, 367079, 'Run2023B', 'y'),
@@ -366,21 +385,88 @@ def plot_eff_by_time_2023(data_2023, region, output_dir):
     ]
     
     for start, end, label, color in spans:
-        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.05)
+        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.1)
         mid_point = run2time((start + end) // 2, run_info)
         ax.text(mid_point, ymin + 15, label, rotation=90, verticalalignment='center', fontsize=22, weight='bold', color=color)
     
     #ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=(1, 15)))
     ax.xaxis.set_major_locator(mdates.MonthLocator())
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
+    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
+
     ax.grid()
     
     #ax.legend(loc='center right', fontsize = 28)
     #plt.tight_layout(rect=[0, 0, 1, 1])
     #plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
         
-    if not output_dir.exists():
-        output_dir.mkdir(parents=True)
+    if not output_path.parent.exists():
+        output_path.parent.mkdir(parents=True)
+    fig.savefig(output_path)
+    plt.close(fig)
+
+def plot_eff_by_time_run3(input_path_run3, run_info_path, region, output_path, fix_color=True, alpha=1.0):
+    if type(region) is list:
+        mid_label = 'RPC Efficiency'
+    elif type(region) is str:
+        mid_label = f'RPC {region} Efficiency'
+    fig, ax = init_figure(
+        figsize = (20, 9),
+        fontsize = 24,
+        com = 13.6,
+        label1 = 'Work in Progress',
+        label2 = f'2022, 2023 Data',
+        mid_label = f'{mid_label}',
+        loc = 0,
+        ylabel = 'Efficiency [%]',
+        xlim = None,
+        ylim = None,
+        xticks = None,
+        yticks = None,
+        log_scale = False,
+    )
+    run_info = pd.read_csv(run_info_path, index_col = False)
+
+    ymin, ymax = 0, 100
+    ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2023/01/Sep', '%Y/%d/%b'))
+    ax.set_ylim(ymin, ymax)
     
-    fig.savefig(output_dir / f"{region}.png")
+    if type(region) is list:
+        for i_region in region:
+            ax, effs, runs = plot_eff_time(ax, input_path_run3, run_info, i_region, fix_color, alpha)     
+        ax.legend(loc='center right', fontsize = 28) 
+    elif type(region) is str:
+        ax, effs, runs = plot_eff_time(ax, input_path_run3, run_info, region, fix_color, alpha)
+    
+    spans = [
+        (355100, 355769, 'Run2022B', 'y'),
+        (355862, 357482, 'Run2022C', 'm'),
+        (357538, 357900, 'Run2022D', 'y'),
+        (359356, 360327, 'Run2022E', 'm'),
+        (360335, 362167, 'Run2022F', 'y'),
+        (362362, 362760, 'Run2022G', 'm'),
+        (366403, 367079, 'Run2023B', 'y'),
+        (367770, 369694, 'Run2023C', 'm'),
+        (370616, 371225, 'Run2023D', 'y'),
+    ]
+    
+    for start, end, label, color in spans:
+        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.1)
+        mid_point = run2time((start + end) // 2, run_info)
+        ax.text(mid_point, ymin + 15, label, rotation=90, verticalalignment='center', fontsize=16, weight='bold', color=color)
+    
+    #ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=(1, 15)))
+    #ax.xaxis.set_major_locator(mdates.MonthLocator())
+    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
+
+    ax.grid()
+    
+    #ax.legend(loc='center right', fontsize = 28)
+    #plt.tight_layout(rect=[0, 0, 1, 1])
+    #plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
+        
+    if not output_path.parent.exists():
+        output_path.parent.mkdir(parents=True)
+    fig.savefig(output_path)
     plt.close(fig)

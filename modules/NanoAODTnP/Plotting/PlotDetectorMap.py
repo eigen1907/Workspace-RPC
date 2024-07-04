@@ -176,8 +176,8 @@ def plot_detector_map(input_path: Path,
         with open(roll_blacklist_path) as stream:
             roll_blacklist = set(json.load(stream))
 
-    h_total: Hist = input_file['total'].to_hist() # type: ignore
-    h_passed: Hist = input_file['passed'].to_hist() # type: ignore
+    h_total: Hist = input_file['total_by_roll'].to_hist() # type: ignore
+    h_passed: Hist = input_file['passed_by_roll'].to_hist() # type: ignore
 
     geom = pd.read_csv(geom_path)
     roll_list = [RPCRoll.from_row(row)
