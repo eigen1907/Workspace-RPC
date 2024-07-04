@@ -19,7 +19,9 @@ from NanoAODTnP.RPCGeometry.RPCGeomServ import RPCRoll
 
 def plot_patches(patches: list[Polygon],
                  values: npt.NDArray[np.float32],
-                 mask: Optional[npt.NDArray[np.bool_]] = None,
+                 #mask: Optional[npt.NDArray[np.bool_]] = None,
+                 zero_mask: Optional[npt.NDArray[np.bool_]] = None,
+                 excluded_mask: Optional[npt.NDArray[np.bool_]] = None,
                  cmap: Union[Colormap, str] = 'magma',
                  edgecolor: str = 'black',                 
                  ax: Optional[plt.Axes] = None,
@@ -34,12 +36,15 @@ def plot_patches(patches: list[Polygon],
         vmin = np.nanmin(values)
     if vmax is None:
         vmax = np.nanmax(values)
+    
     cmap = plt.get_cmap(cmap)
-
     normalized_values = (values - vmin) / (vmax - vmin)
     color = cmap(normalized_values)
-    if mask is not None:
-        color[mask] = np.nan
+    
+    if zero_mask is not None:
+        color[zero_mask] = np.nan
+    if excluded_mask is not None:
+        color[excluded_mask] = np.array([0, 0, 0, 0.8])
 
     collection = PatchCollection(patches)
     collection.set_color(color)
@@ -76,19 +81,19 @@ def plot_detector_unit(h_total,
     """
     plot eff, denom, numer
     """
+    mh.style.use(mh.styles.CMS)
     name_list = [each.id.name for each in roll_list]
     patches = [each.polygon for each in roll_list]
 
+    total = h_total[name_list].values()
+    passed = h_passed[name_list].values()
     if value == "efficiency":
-        total = h_total[name_list].values() # type: ignore
-        passed = h_passed[name_list].values() # type: ignore
         eff = np.divide(passed, total, out=np.zeros_like(total),
                         where=(total > 0))
         values = 100 * eff if percentage else eff
-        inactive_roll_mask = passed < 1
-        value_label = 'Efficiency'
+        values_label = 'Efficiency'
         if percentage:
-            value_label += '[%]'
+            values_label += '[%]'
         cmap = ListedColormap([
            "red", "orangered", "tomato", "darkorange", "orange",
            "gold", "yellow", "greenyellow", "lawngreen", "lime"
@@ -97,31 +102,28 @@ def plot_detector_unit(h_total,
         vmax = 100 if percentage else 1
     
     elif value == "denominator":
-        total = h_total[name_list].values() # type: ignore
         values = total
-        inactive_roll_mask = total < 1
-        value_label = 'Denominator'
+        values_label = 'Denominator'
         cmap = 'YlOrRd'
         vmin = 0
         vmax = np.max(total)
     
     elif value == "numerator":
-        total = h_total[name_list].values() # type: ignore
-        passed = h_passed[name_list].values() # type: ignore
         values = passed
-        inactive_roll_mask = passed < 1
-        value_label = 'Numerator'
+        values_label = 'Numerator'
         cmap = 'YlGnBu'
         vmin = 0
         vmax = np.max(passed)
-
-
+    
+    zero_mask = (values < 1e-4)
+    excluded_mask = (total < 1e-4)
     #fig, ax = plt.subplots(figsize = (6, 5))
     fig, ax = plt.subplots()
     fig = plot_patches(
         patches=patches,
         values=values,
-        mask=inactive_roll_mask,
+        zero_mask=zero_mask,
+        excluded_mask=excluded_mask,
         vmin=vmin,
         vmax=vmax,
         ax=ax,
@@ -133,19 +135,32 @@ def plot_detector_unit(h_total,
     ylabel = roll_list[0].polygon_ylabel
     ymax = roll_list[0].polygon_ymax
 
-    ax.set_xlabel(xlabel, fontsize=14) # type: ignore
-    ax.set_ylabel(ylabel, fontsize=14) # type: ignore
+    ax.set_xlabel(xlabel, fontsize=20) # type: ignore
+    ax.set_ylabel(ylabel, fontsize=20) # type: ignore
     
-    #if percentage:
-    #    cax_ylabel += ' [%]'
-    #cax.set_ylabel(cax_ylabel, fontsize=14)
     cax.set_ylim(vmin, vmax)
     ax.set_ylim(None, ymax) # type: ignore
-    ax.annotate(value_label, (0.975, 0.925), weight='bold',
-                xycoords='axes fraction', fontsize=14, horizontalalignment='right') # type: ignore
     ax.annotate(detector_unit, (0.05, 0.925), weight='bold',
-                xycoords='axes fraction', fontsize=14) # type: ignore
-    mh.cms.label(ax=ax, llabel="Work in Progress", com=com, year=year, fontsize=14)
+                xycoords='axes fraction', fontsize=20) # type: ignore
+    ax.annotate(values_label, (0.95, 0.925), weight='bold',
+                xycoords='axes fraction', fontsize=20, horizontalalignment='right') # type: ignore
+    mh.cms.label(ax=ax, llabel="Work in Progress", com=com, year=year, fontsize=20)
+
+    #ax.hist([], facecolor='black', edgecolor='black', label=r'$Roll_{excluded}$')
+    #ax.hist([], facecolor='white', edgecolor='black', label=f'$Roll_{{{values_label[:-3]}=0}}$')
+
+    ax.hist([], facecolor=np.array([0, 0, 0, 0.8]), edgecolor='black', label=f': Excluded')
+    ax.hist([], facecolor='white', edgecolor='black', label=f': {values_label[:3] if value == 'efficiency' else values_label[:5]}=0')
+    if detector_unit.startswith('RE'):
+        ax.legend(handlelength=1.8, handleheight=1.8,
+                  alignment='right', loc='lower right', 
+                  handletextpad = 0.2,
+                  prop={'weight':'bold', 'size': 15})
+    else:
+        ax.legend(handlelength=1.8, handleheight=1.8,
+                  alignment='right', loc='upper center', 
+                  handletextpad = 0.2,
+                  prop={'weight':'bold', 'size': 15})
 
     if output_path is not None:
         #for suffix in ['.png', '.pdf']:

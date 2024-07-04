@@ -31,7 +31,7 @@ def init_figure(
     yticks: Optional[list] = None,
     log_scale: bool = False,
 ) -> plt.Figure:
-    mh.style.use(mh.styles.CMS)
+    #mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize = figsize)
     mh.cms.label(ax = ax, data = True, label = label1, loc = loc,
                  year = label2, com = com, fontsize = fontsize)
