@@ -44,7 +44,7 @@ def plot_patches(patches: list[Polygon],
     if zero_mask is not None:
         color[zero_mask] = np.nan
     if excluded_mask is not None:
-        color[excluded_mask] = np.array([0, 0, 0, 0.8])
+        color[excluded_mask] = np.array([0, 0, 0, 1])
 
     collection = PatchCollection(patches)
     collection.set_color(color)
@@ -74,6 +74,7 @@ def plot_detector_unit(h_total,
                        percentage: bool,
                        label: str,
                        year: Union[int, str],
+                       lumi: Optional[float],
                        com: float,
                        output_path: Optional[Path],
                        close: bool,
@@ -117,7 +118,7 @@ def plot_detector_unit(h_total,
     
     zero_mask = (values < 1e-4)
     excluded_mask = (total < 1e-4)
-    #fig, ax = plt.subplots(figsize = (6, 5))
+    fig, ax = plt.subplots(figsize = (12, 10))
     fig, ax = plt.subplots()
     fig = plot_patches(
         patches=patches,
@@ -144,23 +145,23 @@ def plot_detector_unit(h_total,
                 xycoords='axes fraction', fontsize=20) # type: ignore
     ax.annotate(values_label, (0.95, 0.925), weight='bold',
                 xycoords='axes fraction', fontsize=20, horizontalalignment='right') # type: ignore
-    mh.cms.label(ax=ax, llabel="Work in Progress", com=com, year=year, fontsize=20)
+    mh.cms.label(ax=ax, llabel="Work in Progress", com=com, year=year, fontsize=20, lumi=lumi)
 
     #ax.hist([], facecolor='black', edgecolor='black', label=r'$Roll_{excluded}$')
     #ax.hist([], facecolor='white', edgecolor='black', label=f'$Roll_{{{values_label[:-3]}=0}}$')
 
-    ax.hist([], facecolor=np.array([0, 0, 0, 0.8]), edgecolor='black', label=f': Excluded')
+    ax.hist([], facecolor=np.array([0, 0, 0, 1]), edgecolor='black', label=f': Excluded')
     ax.hist([], facecolor='white', edgecolor='black', label=f': {values_label[:3] if value == 'efficiency' else values_label[:5]}=0')
     if detector_unit.startswith('RE'):
         ax.legend(handlelength=1.8, handleheight=1.8,
                   alignment='right', loc='lower right', 
                   handletextpad = 0.2,
-                  prop={'weight':'bold', 'size': 15})
+                  prop={'weight':'bold', 'size': 14})
     else:
         ax.legend(handlelength=1.8, handleheight=1.8,
                   alignment='right', loc='upper center', 
                   handletextpad = 0.2,
-                  prop={'weight':'bold', 'size': 15})
+                  prop={'weight':'bold', 'size': 14})
 
     if output_path is not None:
         #for suffix in ['.png', '.pdf']:
@@ -178,6 +179,7 @@ def plot_detector_map(input_path: Path,
                       output_dir: Path,
                       com: float,
                       year: Union[int, str],
+                      lumi: Optional[float],
                       label: str,
                       value: str,
                       percentage: bool = True,
@@ -218,6 +220,7 @@ def plot_detector_map(input_path: Path,
             percentage=percentage,
             label=label,
             year=year,
+            lumi=lumi,
             com=com,
             output_path=output_path,
             close=True

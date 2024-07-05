@@ -22,6 +22,8 @@ def init_figure(
     label1: str = 'Work in Progress',
     label2: Optional[str] = None,
     mid_label: Optional[str] = None,
+    lumi: Optional[float] = None,
+    lumi_format = "{0: .1f}",
     loc: int = 2,
     xlabel: Optional[str] = None,
     ylabel: Optional[str] = None,
@@ -31,12 +33,13 @@ def init_figure(
     yticks: Optional[list] = None,
     log_scale: bool = False,
 ) -> plt.Figure:
-    #mh.style.use(mh.styles.CMS)
+    mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize = figsize)
-    mh.cms.label(ax = ax, data = True, label = label1, loc = loc,
-                 year = label2, com = com, fontsize = fontsize)
-    ax.set_xlabel(xlabel, fontsize = fontsize)
-    ax.set_ylabel(ylabel, fontsize = fontsize)
+    mh.cms.label(ax=ax, data=True, label=label1, loc=loc,
+                 year=label2, com=com, fontsize=fontsize,
+                 lumi=lumi, lumi_format=lumi_format)
+    ax.set_xlabel(xlabel, fontsize=fontsize)
+    ax.set_ylabel(ylabel, fontsize=fontsize)
     if mid_label is not None:
         ax.annotate(mid_label, (0.50, 1.015), #weight='bold',
                     xycoords='axes fraction', fontsize=fontsize, horizontalalignment='center')
@@ -55,11 +58,11 @@ def init_figure(
 def get_region_params(region: str) -> dict:
     facecolor_table = {'All': ['#8EFFF9', '#00AEC9'],
                        'Barrel': ['#d3f5e4', '#21bf70'],
-                       'Disk123': ['#7CA1FF', '#0714FF'],
+                       'Disk1,2,3': ['#7CA1FF', '#0714FF'],
                        'Disk4': ['#FF6666', '#FF3300']}
     edgecolor_table = {'All': ['#005F77', '#005F77'],
                        'Barrel': ['#007700', '#007700'],
-                       'Disk123': ['#000775', '#000775'],
+                       'Disk1,2,3': ['#000775', '#000775'],
                        'Disk4': ['#CC0000', '#CC0000']}
     hatches = ['///', None]
     is_region = np.vectorize(lambda item: item.startswith(region))
@@ -75,10 +78,10 @@ def get_region_params(region: str) -> dict:
         edgecolors = edgecolor_table[region]
         is_region = np.vectorize(lambda item: item.startswith('W'))
     elif region == 'Endcap':
-        facecolors = facecolor_table['Disk123']
-        edgecolors = edgecolor_table['Disk123']
+        facecolors = facecolor_table['Disk1,2,3']
+        edgecolors = edgecolor_table['Disk1,2,3']
         is_region = np.vectorize(lambda item: item.startswith('RE'))
-    elif region == 'Disk123':
+    elif region == 'Disk1,2,3':
         facecolors = facecolor_table[region]
         edgecolors = edgecolor_table[region]
         is_region = np.vectorize(lambda item: item.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')))
@@ -90,8 +93,8 @@ def get_region_params(region: str) -> dict:
         facecolors = facecolor_table['Barrel']
         edgecolors = edgecolor_table['Barrel']
     elif region.startswith(('RE+1', 'RE+2', 'RE+3', 'RE-1', 'RE-2', 'RE-3')):
-        facecolors = facecolor_table['Disk123']
-        edgecolors = edgecolor_table['Disk123']
+        facecolors = facecolor_table['Disk1,2,3']
+        edgecolors = edgecolor_table['Disk1,2,3']
     elif region.startswith(('RE+4', 'RE-4')):
         facecolors = facecolor_table['Disk4']
         edgecolors = edgecolor_table['Disk4']
@@ -132,7 +135,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
 
     fig, ax = init_figure(
         figsize = (12, 8),
-        fontsize = 24,
+        fontsize = 20,
         com = 13.6,
         label1 = 'Work in Progress',
         label2 = f'{region}',
@@ -144,6 +147,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
         xticks = None,
         yticks = None,
         log_scale = False,
+        #lumi=62.6,
     )
 
     count_1, bins_1, patch_1 = ax.hist(eff_1[eff_1 > 0], 
@@ -174,9 +178,9 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     header_row = ['',
                   '',
                   r'$\mu_{eff}$',
-                  r'$\mu_{eff>70 \%}$',
+                  r'$\mu_{eff>70\ \%}$',
                   r'$N_{total}$',
-                  r'$N_{eff<70 \%}$',
+                  r'$N_{eff<70\ \%}$',
                   r'$N_{excluded}$',]
 
     n_total_1 = len(total_1[region_params['is_region'](roll_name_1)])
@@ -184,7 +188,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     n_excluded_1 = len(total_1[region_params['is_region'](roll_name_1) & (total_1 == 0)])
 
     data_1_row = ['', 
-                  '2022', 
+                  r'2022', 
                   f'{np.mean(eff_1):.1f} %', 
                   f'{np.mean(eff_1[eff_1 > 70]):.1f} %',
                   f'{n_total_1}',
@@ -196,7 +200,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     n_excluded_2 = len(total_2[region_params['is_region'](roll_name_2) & (total_2 == 0)])
 
     data_2_row = ['', 
-                  '2023', 
+                  r'2023', 
                   f'{np.mean(eff_2):.1f} %', 
                   f'{np.mean(eff_2[eff_2 > 70]):.1f} %',
                   f'{n_total_2}',
@@ -214,7 +218,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     ax.legend(legend_handles, legend_values,
               ncol = len(header_row), columnspacing = 0.0,
               handletextpad = -0.6, handlelength = 1.5,
-              alignment = 'center', loc = 'upper left', fontsize = 20)
+              alignment = 'center', loc = 'upper left', fontsize = 18)
     output_path = Path(output_path)
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
@@ -296,7 +300,8 @@ def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path, f
         fontsize = 24,
         com = 13.6,
         label1 = 'Work in Progress',
-        label2 = f'2022 Data',
+        label2 = f'2022',
+        lumi = 34.7,
         mid_label = f'{mid_label}',
         loc = 0,
         ylabel = 'Efficiency [%]',
@@ -355,7 +360,8 @@ def plot_eff_by_time_2023(input_path_2023, run_info_path, region, output_path, f
         fontsize = 24,
         com = 13.6,
         label1 = 'Work in Progress',
-        label2 = f'2023 Data',
+        label2 = f'2023',
+        lumi = 27.9,
         mid_label = f'{mid_label}',
         loc = 0,
         ylabel = 'Efficiency [%]',
@@ -415,7 +421,8 @@ def plot_eff_by_time_run3(input_path_run3, run_info_path, region, output_path, f
         fontsize = 24,
         com = 13.6,
         label1 = 'Work in Progress',
-        label2 = f'2022, 2023 Data',
+        label2 = f'2022~2023',
+        lumi = 62.6,
         mid_label = f'{mid_label}',
         loc = 0,
         ylabel = 'Efficiency [%]',
