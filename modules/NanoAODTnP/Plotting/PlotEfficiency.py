@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional, Union
 from hist import intervals
 from datetime import datetime
+from datetime import timedelta
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -244,6 +245,10 @@ def runs2times(runs, run_info):
         times.append(time)
     return np.array(times)
 
+def time_average(dates):
+  any_reference_date = datetime(1900, 1, 1)
+  return any_reference_date + sum([date - any_reference_date for date in dates], timedelta()) / len(dates)
+
 def plot_eff_time(ax, input_path, run_info, region, fix_color=True, alpha=1.0):
     total_by_roll_run = uproot.open(f'{input_path}:total_by_roll_run').to_hist()
     passed_by_roll_run = uproot.open(f'{input_path}:passed_by_roll_run').to_hist()
@@ -290,17 +295,28 @@ def plot_eff_time(ax, input_path, run_info, region, fix_color=True, alpha=1.0):
     )
     return ax, effs, runs
 
-def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path, fix_color=True, alpha=1.0):
+def plot_eff_by_time_run3(input_path, 
+                          run_info_path, 
+                          region,
+                          output_path,
+                          era='Run3',
+                          fix_color=True,
+                          alpha=1.0):
     if type(region) is list:
         mid_label = 'RPC Efficiency'
     elif type(region) is str:
         mid_label = f'RPC {region} Efficiency'
+
+    if era == 'Run3': year = '2022, 2023'
+    elif era == 'Run2022': year = '2022'
+    elif era == 'Run2023': year = '2023'
+
     fig, ax = init_figure(
         figsize = (20, 9),
         fontsize = 24,
         com = 13.6,
         label1 = 'Work in Progress',
-        label2 = f'2022',
+        label2 = year,
         lumi = 34.7,
         mid_label = f'{mid_label}',
         loc = 0,
@@ -311,7 +327,6 @@ def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path, f
         yticks = None,
         log_scale = False,
     )
-
     run_info = pd.read_csv(run_info_path, index_col = False)
     
     ymin, ymax = 0, 100
@@ -320,130 +335,17 @@ def plot_eff_by_time_2022(input_path_2022, run_info_path, region, output_path, f
     
     if type(region) is list:
         for i_region in region:
-            ax, effs, runs = plot_eff_time(ax, input_path_2022, run_info, i_region, fix_color, alpha)      
+            ax, effs, runs = plot_eff_time(ax, input_path, run_info, i_region, fix_color, alpha)      
         ax.legend(loc='center right', fontsize = 28) 
     elif type(region) is str:
-        ax, effs, runs = plot_eff_time(ax, input_path_2022, run_info, region, fix_color, alpha)
+        ax, effs, runs = plot_eff_time(ax, input_path, run_info, region, fix_color, alpha)
     
-    spans = [
-        (355100, 355769, 'Run2022B', 'y'),
-        (355862, 357482, 'Run2022C', 'm'),
-        (357538, 357900, 'Run2022D', 'y'),
-        (359356, 360327, 'Run2022E', 'm'),
-        (360335, 362167, 'Run2022F', 'y'),
-        (362362, 362760, 'Run2022G', 'm'),
-    ]
-    
-    for start, end, label, color in spans:
-        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.1)
-        mid_point = run2time((start + end) // 2, run_info)
-        ax.text(mid_point, ymin + 15, label, rotation=90, verticalalignment='center', fontsize=22, weight='bold', color=color)
-    
-    #ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=(1, 15)))
-    ax.xaxis.set_major_locator(mdates.MonthLocator())
-    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
-    ax.grid()
-    
-    if not output_path.parent.exists():
-        output_path.parent.mkdir(parents=True)
-    fig.savefig(output_path)
-    plt.close(fig)
-
-def plot_eff_by_time_2023(input_path_2023, run_info_path, region, output_path, fix_color=True, alpha=1.0):
-    if type(region) is list:
-        mid_label = 'RPC Efficiency'
-    elif type(region) is str:
-        mid_label = f'RPC {region} Efficiency'
-    fig, ax = init_figure(
-        figsize = (20, 9),
-        fontsize = 24,
-        com = 13.6,
-        label1 = 'Work in Progress',
-        label2 = f'2023',
-        lumi = 27.9,
-        mid_label = f'{mid_label}',
-        loc = 0,
-        ylabel = 'Efficiency [%]',
-        xlim = None,
-        ylim = None,
-        xticks = None,
-        yticks = None,
-        log_scale = False,
-    )
-    run_info = pd.read_csv(run_info_path, index_col = False)
-
-    ymin, ymax = 0, 100
-    ax.set_xlim(datetime.strptime('2023/01/Apr', '%Y/%d/%b'), datetime.strptime('2023/01/Aug', '%Y/%d/%b'))
-    ax.set_ylim(ymin, ymax)
-    
-    if type(region) is list:
-        for i_region in region:
-            ax, effs, runs = plot_eff_time(ax, input_path_2023, run_info, i_region, fix_color, alpha)     
-        ax.legend(loc='center right', fontsize = 28) 
-    elif type(region) is str:
-        ax, effs, runs = plot_eff_time(ax, input_path_2023, run_info, region, fix_color, alpha)
-    
-    spans = [
-        (366403, 367079, 'Run2023B', 'y'),
-        (367770, 369694, 'Run2023C', 'm'),
-        (370616, 371225, 'Run2023D', 'y'),
-    ]
-    
-    for start, end, label, color in spans:
-        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.1)
-        mid_point = run2time((start + end) // 2, run_info)
-        ax.text(mid_point, ymin + 15, label, rotation=90, verticalalignment='center', fontsize=22, weight='bold', color=color)
-    
-    #ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=(1, 15)))
-    ax.xaxis.set_major_locator(mdates.MonthLocator())
-    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
-
-    ax.grid()
-    
-    #ax.legend(loc='center right', fontsize = 28)
-    #plt.tight_layout(rect=[0, 0, 1, 1])
-    #plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
-        
-    if not output_path.parent.exists():
-        output_path.parent.mkdir(parents=True)
-    fig.savefig(output_path)
-    plt.close(fig)
-
-def plot_eff_by_time_run3(input_path_run3, run_info_path, region, output_path, fix_color=True, alpha=1.0):
-    if type(region) is list:
-        mid_label = 'RPC Efficiency'
-    elif type(region) is str:
-        mid_label = f'RPC {region} Efficiency'
-    fig, ax = init_figure(
-        figsize = (20, 9),
-        fontsize = 24,
-        com = 13.6,
-        label1 = 'Work in Progress',
-        label2 = f'2022~2023',
-        lumi = 62.6,
-        mid_label = f'{mid_label}',
-        loc = 0,
-        ylabel = 'Efficiency [%]',
-        xlim = None,
-        ylim = None,
-        xticks = None,
-        yticks = None,
-        log_scale = False,
-    )
-    run_info = pd.read_csv(run_info_path, index_col = False)
-
-    ymin, ymax = 0, 100
-    ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2023/01/Sep', '%Y/%d/%b'))
-    ax.set_ylim(ymin, ymax)
-    
-    if type(region) is list:
-        for i_region in region:
-            ax, effs, runs = plot_eff_time(ax, input_path_run3, run_info, i_region, fix_color, alpha)     
-        ax.legend(loc='center right', fontsize = 28) 
-    elif type(region) is str:
-        ax, effs, runs = plot_eff_time(ax, input_path_run3, run_info, region, fix_color, alpha)
+    if year == '2022, 2023':
+        ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2023/01/Sep', '%Y/%d/%b'))
+    elif year == '2022':
+        ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2022/01/Dec', '%Y/%d/%b'))
+    elif year == '2023':
+        ax.set_xlim(datetime.strptime('2023/01/Apr', '%Y/%d/%b'), datetime.strptime('2023/01/Aug', '%Y/%d/%b'))
     
     spans = [
         (355100, 355769, 'Run2022B', 'y'),
@@ -458,21 +360,17 @@ def plot_eff_by_time_run3(input_path_run3, run_info_path, region, output_path, f
     ]
     
     for start, end, label, color in spans:
-        ax.axvspan(run2time(start, run_info), run2time(end, run_info), color=color, alpha=0.1)
-        mid_point = run2time((start + end) // 2, run_info)
-        ax.text(mid_point, ymin + 15, label, rotation=90, verticalalignment='center', fontsize=16, weight='bold', color=color)
-    
-    #ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=(1, 15)))
-    #ax.xaxis.set_major_locator(mdates.MonthLocator())
-    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%b'))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
+        start_time = run2time(start, run_info)
+        end_time = run2time(end, run_info)
+        mid_time = time_average([start_time, end_time])
+        ax.axvspan(start_time, end_time, color=color, alpha=0.1)
+        ax.text(mid_time, ymin + 15, label, rotation=90, 
+                va='center', ha='center', fontsize=16, weight='bold', color=color)
 
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
+    ax.xaxis.set_minor_locator(mdates.MonthLocator())
     ax.grid()
-    
-    #ax.legend(loc='center right', fontsize = 28)
-    #plt.tight_layout(rect=[0, 0, 1, 1])
-    #plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
-        
+
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
     fig.savefig(output_path)

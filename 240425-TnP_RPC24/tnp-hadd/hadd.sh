@@ -1,5 +1,6 @@
 #!/bin/bash
-TYPES=(without_blacklist with_blacklist_roll with_blacklist_roll_run)
+#TYPES=(without_blacklist with_blacklist_roll with_blacklist_roll_run)
+TYPES=(with_blacklist_roll with_blacklist_roll_run)
 for TYPE in ${TYPES[@]}
 do
     SOURCE_DIR=/users/hep/eigen1907/store/TnP-NanoAOD/flatten_output/${TYPE}

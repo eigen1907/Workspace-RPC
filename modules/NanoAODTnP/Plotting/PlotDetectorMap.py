@@ -27,7 +27,7 @@ def plot_patches(patches: list[Polygon],
                  ax: Optional[plt.Axes] = None,
                  vmin: Optional[Union[float, np.float32]] = None,
                  vmax: Optional[Union[float, np.float32]] = None,
-                 lw: float = 1,
+                 lw: float = 1.5,
 ) -> plt.Figure:
     """
     """
@@ -44,13 +44,24 @@ def plot_patches(patches: list[Polygon],
     if zero_mask is not None:
         color[zero_mask] = np.nan
     if excluded_mask is not None:
-        color[excluded_mask] = np.array([0, 0, 0, 1])
+        color[excluded_mask] = np.nan
 
     collection = PatchCollection(patches)
     collection.set_color(color)
     collection.set_edgecolor(edgecolor)
     collection.set_linewidth(lw)
     ax.add_collection(collection)
+
+    excluded_patches = []
+    for idx in range(len(patches)):
+        if excluded_mask[idx] == True:
+            excluded_patches.append(patches[idx])
+    excluded_collection = PatchCollection(excluded_patches)
+    excluded_collection.set_color(np.array([0, 0, 0, 0.8]))
+    excluded_collection.set_edgecolor(edgecolor)
+    excluded_collection.set_linewidth(lw)
+    excluded_collection.set_hatch('///')
+    ax.add_collection(excluded_collection)
 
     # add colobar
     ax.autoscale_view()
@@ -119,7 +130,6 @@ def plot_detector_unit(h_total,
     zero_mask = (values < 1e-4)
     excluded_mask = (total < 1e-4)
     fig, ax = plt.subplots(figsize = (12, 10))
-    fig, ax = plt.subplots()
     fig = plot_patches(
         patches=patches,
         values=values,
@@ -136,35 +146,31 @@ def plot_detector_unit(h_total,
     ylabel = roll_list[0].polygon_ylabel
     ymax = roll_list[0].polygon_ymax
 
-    ax.set_xlabel(xlabel, fontsize=20) # type: ignore
-    ax.set_ylabel(ylabel, fontsize=20) # type: ignore
+    ax.set_xlabel(xlabel, fontsize=24) # type: ignore
+    ax.set_ylabel(ylabel, fontsize=24) # type: ignore
     
     cax.set_ylim(vmin, vmax)
     ax.set_ylim(None, ymax) # type: ignore
     ax.annotate(detector_unit, (0.05, 0.925), weight='bold',
-                xycoords='axes fraction', fontsize=20) # type: ignore
+                xycoords='axes fraction', fontsize=24) # type: ignore
     ax.annotate(values_label, (0.95, 0.925), weight='bold',
-                xycoords='axes fraction', fontsize=20, horizontalalignment='right') # type: ignore
-    mh.cms.label(ax=ax, llabel="Work in Progress", com=com, year=year, fontsize=20, lumi=lumi)
+                xycoords='axes fraction', fontsize=24, horizontalalignment='right') # type: ignore
+    mh.cms.label(ax=ax, llabel="Work in Progress", com=com, year=year, fontsize=24, lumi=lumi)
 
-    #ax.hist([], facecolor='black', edgecolor='black', label=r'$Roll_{excluded}$')
-    #ax.hist([], facecolor='white', edgecolor='black', label=f'$Roll_{{{values_label[:-3]}=0}}$')
-
-    ax.hist([], facecolor=np.array([0, 0, 0, 1]), edgecolor='black', label=f': Excluded')
+    ax.hist([], facecolor=np.array([0, 0, 0, 0.8]), edgecolor='black', hatch='///', label=f': Excluded')
     ax.hist([], facecolor='white', edgecolor='black', label=f': {values_label[:3] if value == 'efficiency' else values_label[:5]}=0')
     if detector_unit.startswith('RE'):
-        ax.legend(handlelength=1.8, handleheight=1.8,
+        ax.legend(handlelength=1.4, handleheight=1.0,
                   alignment='right', loc='lower right', 
                   handletextpad = 0.2,
-                  prop={'weight':'bold', 'size': 14})
+                  prop={'weight':'bold', 'size': 19})
     else:
-        ax.legend(handlelength=1.8, handleheight=1.8,
+        ax.legend(handlelength=1.4, handleheight=1.0,
                   alignment='right', loc='upper center', 
                   handletextpad = 0.2,
-                  prop={'weight':'bold', 'size': 14})
+                  prop={'weight':'bold', 'size': 19})
 
     if output_path is not None:
-        #for suffix in ['.png', '.pdf']:
         for suffix in ['.png']:
             fig.savefig(output_path.with_suffix(suffix))
 
