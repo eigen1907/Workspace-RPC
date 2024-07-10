@@ -1,6 +1,6 @@
 #!/bin/bash
-TYPES=(without_blacklist with_blacklist_roll with_blacklist_roll_run)
-#TYPES=(with_blacklist_roll)
+TYPES=(without_blacklist with_blacklist_roll with_blacklist_roll_run with_blacklist_roll_run_RE4)
+#TYPES=(with_blacklist_roll_run_RE4)
 for TYPE in ${TYPES[@]}
 do
     WOKING_DIR=$(pwd)

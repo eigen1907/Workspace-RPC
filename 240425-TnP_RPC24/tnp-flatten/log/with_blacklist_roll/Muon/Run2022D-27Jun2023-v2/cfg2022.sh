@@ -7,7 +7,7 @@ srun python3 tnp-flatten-script.py \
     -c ${COND_PATH}/cert/Cert_Collisions2022_355100_362760_Golden.json \
     -g ${COND_PATH}/geometry/run3.csv \
     -r ${COND_PATH}/run/run3.csv \
-    --roll-blacklist-path ${COND_PATH}/blacklist/roll-blacklist-2022.json \
+    --roll-blacklist-path ${COND_PATH}/blacklist_roll/roll-blacklist-2022.json \
     #--run-blacklist-path ${COND_PATH}/blacklist/run-blacklist.json
 
 

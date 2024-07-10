@@ -122,6 +122,15 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     passed_2 = passed_by_roll_2.values()
     roll_name_2 = np.array(total_by_roll_2.axes[0])
 
+    region_params = get_region_params(region)
+    is_iRPC = np.vectorize(lambda roll: roll in {"RE+4_R1_CH15_A", "RE+4_R1_CH16_A", "RE+3_R1_CH15_A", "RE+3_R1_CH16_A"})
+
+    total_1 = total_1[region_params['is_region'](roll_name_1) & ~is_iRPC(roll_name_1)]
+    passed_1 = passed_1[region_params['is_region'](roll_name_1) & ~is_iRPC(roll_name_1)]
+    
+    total_2 = total_2[region_params['is_region'](roll_name_2) & ~is_iRPC(roll_name_2)]
+    passed_2 = passed_2[region_params['is_region'](roll_name_2) & ~is_iRPC(roll_name_2)]
+
     eff_1 = np.divide(passed_1, total_1,
                       out = np.zeros_like(total_1),
                       where = (total_1 > 0)) * 100
@@ -130,16 +139,24 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
                       out = np.zeros_like(total_2),
                       where = (total_2 > 0)) * 100
 
-    region_params = get_region_params(region)
-    eff_1 = eff_1[region_params['is_region'](roll_name_1) & (total_1 != 0)]
-    eff_2 = eff_2[region_params['is_region'](roll_name_2) & (total_2 != 0)]
+    eff_1 = eff_1[total_1 != 0]
+    eff_2 = eff_2[total_2 != 0]
+    
+    n_total_1 = len(total_1)
+    n_eff_under_70_1 = len(eff_1[eff_1 <= 70])
+    n_excluded_1 = len(total_1[total_1 == 0])
+
+    n_total_2 = len(total_2)
+    n_eff_under_70_2 = len(eff_2[eff_2 <= 70])
+    n_excluded_2 = len(total_2[total_2 == 0])
 
     fig, ax = init_figure(
         figsize = (12, 8),
         fontsize = 20,
-        com = 13.6,
+        com = r'$\sqrt{s} = 13.6$',
         label1 = 'Work in Progress',
-        label2 = f'{region}',
+        mid_label = f'RPC {region}',
+        label2 = f'2022, 2023',
         loc = 0,
         xlabel = 'Efficiency [%]',
         ylabel = 'Number of Rolls',
@@ -178,32 +195,24 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     extra = Rectangle((0, 0), 0.1, 0.1, fc='w', fill=False, edgecolor='none', linewidth=0)
     header_row = ['',
                   '',
-                  r'$\mu_{eff}$',
-                  r'$\mu_{eff>70\ \%}$',
+                  r'$<eff>$',
+                  r'$<eff>_{eff>70\ \%}$',
                   r'$N_{total}$',
                   r'$N_{eff<70\ \%}$',
                   r'$N_{excluded}$',]
 
-    n_total_1 = len(total_1[region_params['is_region'](roll_name_1)])
-    n_eff_under_70_1 = len(eff_1[eff_1 <= 70])
-    n_excluded_1 = len(total_1[region_params['is_region'](roll_name_1) & (total_1 == 0)])
-
     data_1_row = ['', 
                   r'2022', 
-                  f'{np.mean(eff_1):.1f} %', 
-                  f'{np.mean(eff_1[eff_1 > 70]):.1f} %',
+                  f' {np.mean(eff_1):.1f} %', 
+                  f' {np.mean(eff_1[eff_1 > 70]):.1f} %',
                   f'{n_total_1}',
                   f'{n_eff_under_70_1} ({n_eff_under_70_1/n_total_1*100:.1f} %)',
                   f'{n_excluded_1} ({n_excluded_1/n_total_1*100:.1f} %)',]
-    
-    n_total_2 = len(total_2[region_params['is_region'](roll_name_2)])
-    n_eff_under_70_2 = len(eff_2[eff_2 <= 70])
-    n_excluded_2 = len(total_2[region_params['is_region'](roll_name_2) & (total_2 == 0)])
 
     data_2_row = ['', 
                   r'2023', 
-                  f'{np.mean(eff_2):.1f} %', 
-                  f'{np.mean(eff_2[eff_2 > 70]):.1f} %',
+                  f' {np.mean(eff_2):.1f} %', 
+                  f' {np.mean(eff_2[eff_2 > 70]):.1f} %',
                   f'{n_total_2}',
                   f'{n_eff_under_70_2} ({n_eff_under_70_2/n_total_2*100:.1f} %)',
                   f'{n_excluded_2} ({n_excluded_2/n_total_2*100:.1f} %)',]
@@ -285,11 +294,12 @@ def plot_eff_time(ax, input_path, run_info, region, fix_color=True, alpha=1.0):
         yerr = (lower_limits, upper_limits),
         fmt = 's',
         markersize = 6,
-        markerfacecolor = 'none',
+        markerfacecolor = region_params['facecolors'][1] if fix_color is True else None,
+        #markerfacecolor = None,
         markeredgewidth = 2,
+        color = region_params['facecolors'][1] if fix_color is True else None,
         lw = 2,
         capsize = 4,
-        color = region_params['facecolors'][1] if fix_color is True else None,
         label = region,
         alpha = alpha,
     )
@@ -300,6 +310,7 @@ def plot_eff_by_time_run3(input_path,
                           region,
                           output_path,
                           era='Run3',
+                          lumi=69.4,
                           fix_color=True,
                           alpha=1.0):
     if type(region) is list:
@@ -307,17 +318,13 @@ def plot_eff_by_time_run3(input_path,
     elif type(region) is str:
         mid_label = f'RPC {region} Efficiency'
 
-    if era == 'Run3': year = '2022, 2023'
-    elif era == 'Run2022': year = '2022'
-    elif era == 'Run2023': year = '2023'
-
     fig, ax = init_figure(
         figsize = (20, 9),
         fontsize = 24,
-        com = 13.6,
+        com = r'$\sqrt{s} = 13.6$',
         label1 = 'Work in Progress',
-        label2 = year,
-        lumi = 34.7,
+        label2 = era[3:] if era != 'Run3' else '2022, 2023',
+        lumi = lumi,
         mid_label = f'{mid_label}',
         loc = 0,
         ylabel = 'Efficiency [%]',
@@ -329,46 +336,83 @@ def plot_eff_by_time_run3(input_path,
     )
     run_info = pd.read_csv(run_info_path, index_col = False)
     
+    #ymin, ymax = 70, 100
     ymin, ymax = 0, 100
-    ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2022/01/Dec', '%Y/%d/%b'))
     ax.set_ylim(ymin, ymax)
     
+    if era == 'Run3':
+        ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2023/01/Aug', '%Y/%d/%b'))
+    elif era == 'Run2022':
+        ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2022/01/Dec', '%Y/%d/%b'))
+    elif era == 'Run2023':
+        ax.set_xlim(datetime.strptime('2023/01/Apr', '%Y/%d/%b'), datetime.strptime('2023/01/Aug', '%Y/%d/%b'))
+    
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
+    #ax.xaxis.set_major_locator(mdates.MonthLocator())
+    ax.xaxis.set_minor_locator(mdates.MonthLocator())
+    
+    era_spans = [
+        #(run2time(355100, run_info), run2time(355769, run_info), 'Run2022B', 'y'),
+        #(run2time(355862, run_info), run2time(357482, run_info), 'Run2022C', 'm'),
+        #(run2time(357538, run_info), run2time(357900, run_info), 'Run2022D', 'y'),
+        #(run2time(359356, run_info), run2time(360327, run_info), 'Run2022E', 'm'),
+        #(run2time(360335, run_info), run2time(362167, run_info), 'Run2022F', 'y'),
+        #(run2time(362362, run_info), run2time(362760, run_info), 'Run2022G', 'm'),
+        #(run2time(366403, run_info), run2time(367079, run_info), 'Run2023B', 'y'),
+        #(run2time(367770, run_info), run2time(369694, run_info), 'Run2023C', 'm'),
+        #(run2time(370616, run_info), run2time(371225, run_info), 'Run2023D', 'y'),
+        (datetime.strptime('2022/24/Aug', '%Y/%d/%b'), datetime.strptime('2022/20/Sep', '%Y/%d/%b'), 'TS', 'm'),
+        #(datetime.strptime('2022/30/Nov', '%Y/%d/%b'), datetime.strptime('2022/22/Dec', '%Y/%d/%b'), 'YETS/2022', 'm'),
+        #(datetime.strptime('2023/07/Jan', '%Y/%d/%b'), datetime.strptime('2023/11/Mar', '%Y/%d/%b'), 'YETS/2023', 'm'),
+        (datetime.strptime('2022/30/Nov', '%Y/%d/%b'), datetime.strptime('2023/11/Mar', '%Y/%d/%b'), 'YETS', 'm'),
+        (datetime.strptime('2023/18/Jun', '%Y/%d/%b'), datetime.strptime('2023/25/Jun', '%Y/%d/%b'), 'TS', 'm'),
+    ]
+    
+    for start, end, label, color in era_spans:
+        middle = time_average([start, end])
+        ax.axvspan(start, end, color=color, alpha=0.1)
+        ax.text(middle, ymin + 95, label, rotation=90,
+                va='top', ha='center', fontsize=20, weight='bold', color=color)
+                #va='center', ha='center', fontsize=16, weight='bold', color=color)
+
+    
+    operations = [
+        #(datetime.strptime('2022/20/Jul', '%Y/%d/%b'), datetime.strptime('2022/23/Jul', '%Y/%d/%b'), 'Mini Scan', 'y'),
+        #(run2time(357329, run_info), run2time(357330, run_info), 'HV Scan', 'y'),
+        #(run2time(367661, run_info), run2time(367665, run_info), 'Mini Scan', 'y'),
+        (datetime.strptime('2022/20/Jul', '%Y/%d/%b'), datetime.strptime('2022/20/Jul', '%Y/%d/%b'), 'Mini Scan', 'y'),
+        (run2time(357330, run_info), run2time(357330, run_info), 'HV Scan', 'y'),
+        (run2time(367665, run_info), run2time(367665, run_info), 'Mini Scan', 'y'),
+        #(datetime.strptime('2023/25/Jun', '%Y/%d/%b'), datetime.strptime('2023/25/Jun', '%Y/%d/%b'), 'Resolving RE4 Issue', 'b'),
+    ]
+
+    for start, end, label, color in operations:
+        ax.axvspan(start, end, color=color, alpha=0.8)
+        ax.text(start, ymin + 5, label, rotation=90,
+                va='bottom', ha='right', fontsize=20, weight='bold', color=color)
+
+    
+    issue_runs = [
+        (datetime.strptime('2022/10/Jul', '%Y/%d/%b'), datetime.strptime('2022/12/Jul', '%Y/%d/%b'), 'LHC Scrubbing', 'y'),
+        (datetime.strptime('2022/06/Oct', '%Y/%d/%b'), datetime.strptime('2022/06/Oct', '%Y/%d/%b'), 'LV Power Issue', 'r'),
+        (datetime.strptime('2022/21/Oct', '%Y/%d/%b'), datetime.strptime('2022/25/Oct', '%Y/%d/%b'), 'Twinmux Power Issue', 'r'),
+        (datetime.strptime('2023/14/Jul', '%Y/%d/%b'), datetime.strptime('2023/15/Jul', '%Y/%d/%b'), 'Trigger Power Issue', 'r')
+    ]
+
+    for start, end, label, color in issue_runs:
+        ax.axvspan(start, end, color=color, alpha=0.3)
+        ax.text(start, ymin + 5, label, rotation=90,
+                va='bottom', ha='right', fontsize=20, weight='bold', color=color)
+    
+
     if type(region) is list:
         for i_region in region:
             ax, effs, runs = plot_eff_time(ax, input_path, run_info, i_region, fix_color, alpha)      
-        ax.legend(loc='center right', fontsize = 28) 
+        #ax.legend(loc='center right', fontsize = 28)
+        ax.legend(fontsize=28, loc='lower center') if era == 'Run3' else ax.legend(fontsize=28)
     elif type(region) is str:
         ax, effs, runs = plot_eff_time(ax, input_path, run_info, region, fix_color, alpha)
     
-    if year == '2022, 2023':
-        ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2023/01/Sep', '%Y/%d/%b'))
-    elif year == '2022':
-        ax.set_xlim(datetime.strptime('2022/01/Jul', '%Y/%d/%b'), datetime.strptime('2022/01/Dec', '%Y/%d/%b'))
-    elif year == '2023':
-        ax.set_xlim(datetime.strptime('2023/01/Apr', '%Y/%d/%b'), datetime.strptime('2023/01/Aug', '%Y/%d/%b'))
-    
-    spans = [
-        (355100, 355769, 'Run2022B', 'y'),
-        (355862, 357482, 'Run2022C', 'm'),
-        (357538, 357900, 'Run2022D', 'y'),
-        (359356, 360327, 'Run2022E', 'm'),
-        (360335, 362167, 'Run2022F', 'y'),
-        (362362, 362760, 'Run2022G', 'm'),
-        (366403, 367079, 'Run2023B', 'y'),
-        (367770, 369694, 'Run2023C', 'm'),
-        (370616, 371225, 'Run2023D', 'y'),
-    ]
-    
-    for start, end, label, color in spans:
-        start_time = run2time(start, run_info)
-        end_time = run2time(end, run_info)
-        mid_time = time_average([start_time, end_time])
-        ax.axvspan(start_time, end_time, color=color, alpha=0.1)
-        ax.text(mid_time, ymin + 15, label, rotation=90, 
-                va='center', ha='center', fontsize=16, weight='bold', color=color)
-
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b/%Y'))
-    ax.xaxis.set_minor_locator(mdates.MonthLocator())
     ax.grid()
 
     if not output_path.parent.exists():

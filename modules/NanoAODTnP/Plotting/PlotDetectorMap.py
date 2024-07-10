@@ -151,24 +151,24 @@ def plot_detector_unit(h_total,
     
     cax.set_ylim(vmin, vmax)
     ax.set_ylim(None, ymax) # type: ignore
-    ax.annotate(detector_unit, (0.05, 0.925), weight='bold',
+    ax.annotate(detector_unit, (0.05, 0.920), weight='bold',
                 xycoords='axes fraction', fontsize=24) # type: ignore
-    ax.annotate(values_label, (0.95, 0.925), weight='bold',
+    ax.annotate(values_label, (0.97, 0.920), weight='bold',
                 xycoords='axes fraction', fontsize=24, horizontalalignment='right') # type: ignore
-    mh.cms.label(ax=ax, llabel="Work in Progress", com=com, year=year, fontsize=24, lumi=lumi)
+    mh.cms.label(ax=ax, llabel=label, com=com, year=year, fontsize=24, lumi=lumi)
 
     ax.hist([], facecolor=np.array([0, 0, 0, 0.8]), edgecolor='black', hatch='///', label=f': Excluded')
-    ax.hist([], facecolor='white', edgecolor='black', label=f': {values_label[:3] if value == 'efficiency' else values_label[:5]}=0')
+    #ax.hist([], facecolor='white', edgecolor='black', label=f': {values_label[:3] if value == 'efficiency' else values_label[:5]}=0')
     if detector_unit.startswith('RE'):
-        ax.legend(handlelength=1.4, handleheight=1.0,
+        ax.legend(handlelength=1.4, handleheight=1.2,
                   alignment='right', loc='lower right', 
                   handletextpad = 0.2,
-                  prop={'weight':'bold', 'size': 19})
+                  prop={'weight':'bold', 'size': 24})
     else:
-        ax.legend(handlelength=1.4, handleheight=1.0,
+        ax.legend(handlelength=1.4, handleheight=1.2,
                   alignment='right', loc='upper center', 
                   handletextpad = 0.2,
-                  prop={'weight':'bold', 'size': 19})
+                  prop={'weight':'bold', 'size': 24})
 
     if output_path is not None:
         for suffix in ['.png']:
@@ -184,10 +184,10 @@ def plot_detector_map(input_path: Path,
                       geom_path: Path,
                       output_dir: Path,
                       com: float,
-                      year: Union[int, str],
                       lumi: Optional[float],
                       label: str,
                       value: str,
+                      year: Optional[Union[int, str]] = None,
                       percentage: bool = True,
                       roll_blacklist_path: Optional[Path] = None,
 ):

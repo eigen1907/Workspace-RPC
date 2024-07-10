@@ -26,6 +26,8 @@ def main():
                         help='blacklist roll file')
     parser.add_argument('--run-blacklist-path', type=str,
                         help='blacklist run file')
+    parser.add_argument('--exclude-RE4', type=bool,
+                        help='True: Exclude RE4, False(default): include RE4')
     args = parser.parse_args()
 
     flatten_nanoaod(
@@ -36,7 +38,8 @@ def main():
         output_path=args.output_path,
         name=args.name,
         roll_blacklist_path=args.roll_blacklist_path,
-        run_blacklist_path=args.run_blacklist_path
+        run_blacklist_path=args.run_blacklist_path,
+        exclude_RE4=args.exclude_RE4,
     )
 
 

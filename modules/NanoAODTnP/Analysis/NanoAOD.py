@@ -118,6 +118,7 @@ def flatten_nanoaod(input_path: Path,
                     roll_blacklist_path: Optional[str] = None,
                     run_blacklist_path: Optional[str] = None,
                     name: str = 'rpcTnP',
+                    exclude_RE4 = False,
 ):
     tree = read_nanoaod_by_hit(
         path = input_path,
@@ -144,6 +145,11 @@ def flatten_nanoaod(input_path: Path,
             roll_name = tree['roll_name'],
             roll_blacklist_path = roll_blacklist_path,
         )
+
+    if exclude_RE4 == True:
+        re4_mask = np.vectorize(lambda roll: roll.startswith(('RE-4', 'RE+4')))(tree['roll_name'])
+        mask = mask & ~re4_mask
+    
     tree = {key: value[mask] for key, value in tree.items()}
 
     muon_tree = read_nanoaod_by_muon(
