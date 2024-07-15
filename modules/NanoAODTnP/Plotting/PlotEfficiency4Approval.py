@@ -44,7 +44,7 @@ def init_figure(
     ax.set_xlabel(xlabel, fontsize=fontsize)
     ax.set_ylabel(ylabel, fontsize=fontsize)
     if mid_label is not None:
-        ax.annotate(mid_label, mid_label_loc, #weight='bold',
+        ax.annotate(mid_label, mid_label_loc, weight='bold',
                     xycoords='axes fraction', fontsize=fontsize, horizontalalignment='left')
     if xlim is not None:
         ax.set_xlim(xlim)
@@ -156,11 +156,11 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
         figsize = (12, 8),
         fontsize = 24,
         com = 13.6,
-        label1 = f'Preliminary\n2022 & 2023 pp Data',
-        mid_label = f'RPC Efficiency - {region}',
-        mid_label_loc = (0.00, 1.025),
+        label1 = f'Preliminary',
+        mid_label = f'RPC {region}',
+        mid_label_loc = (0.05, 0.90),
         label2 = r'$62.6\ fb^{-1}$',
-        loc = 2,
+        loc = 0,
         xlabel = 'Efficiency [%]',
         ylabel = 'Number of Rolls',
         xlim = (70, 100),
@@ -416,11 +416,14 @@ def hist_tnp_mass(input_path1, input_path2, output_path):
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize=(12, 8))
     #mh.cms.label(ax=ax, llabel=f'Preliminary', com=r'$\sqrt{s} = 13.6$', year="2022, 2023", loc=2, fontsize=22)
-    mh.cms.label(ax=ax, llabel=f'Preliminary\n2022 & 2023 pp Data', year=r'$62.6\ fb^{-1}$',com=13.6, loc=2, fontsize=24)
+    mh.cms.label(ax=ax, llabel=f'Preliminary', year=r'$62.6\ fb^{-1}$',com=13.6, loc=0, fontsize=24)
     ax.set_xlabel(r'$\mu^{+}\mu^{-}$ (tag-probe) invariant mass [GeV]', fontsize=22)
     ax.set_ylabel('Events / 0.5 GeV', fontsize=22)
-    ax.set_xlim(67.5, 112.5)
+    ax.set_xlim(70, 110)
     ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0), useMathText=True)
+    ax.yaxis.offsetText.set_visible(False)
+    ax.annotate(r'$x10^{6}$', (-0.06, 1.0), #weight='bold',
+                xycoords='axes fraction', fontsize=18, horizontalalignment='left')
 
 
     h_mass_2022 = Hist(Regular(80, 70, 110))
