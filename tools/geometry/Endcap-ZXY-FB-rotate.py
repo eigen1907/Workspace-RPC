@@ -13,16 +13,15 @@ def update(frame_number):
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('-s', '--source', type=str, help='geometry source', default='rpcf_2024_v2')
+parser.add_argument('-g', '--geom-path', type=str, help='geometry csv file path', default='rpcf_2024_v2.csv')
+parser.add_argument('-o', '--output-dir', type=Path, help='output dir path', default='./')
 args = parser.parse_args()
-source = args.source
-
-geom_path = (Path(__file__).parents[0] / 'csv' / source).with_suffix('.csv')
+geom_path = args.geom_path
+output_dir = args.output_dir
 geometry = pd.read_csv(geom_path, sep=',', index_col=False)
 stations = ['RE-1', 'RE-2', 'RE-3', 'RE-4', 'RE+1', 'RE+2', 'RE+3', 'RE+4']
 plotting_size = 1.6
 
-output_dir = Path.cwd() / source / 'XYZ-FB'
 if not output_dir.exists():
     output_dir.mkdir(parents=True)
 
@@ -50,10 +49,11 @@ for station in stations:
         p_x = np.concatenate((p1_p2_x, p2_p3_x, p3_p4_x, p4_p1_x))
         p_y = np.concatenate((p1_p2_y, p2_p3_y, p3_p4_y, p4_p1_y))
         p_z = np.concatenate((p1_p2_z, p2_p3_z, p3_p4_z, p4_p1_z))
-        if chamber.is_front == True:
-            ax.plot(p_z, p_x, p_y, c="red")
-        if chamber.is_front == False:
-            ax.plot(p_z, p_x, p_y, c="blue")
+        ax.plot(p_z, p_x, p_y, c="black")
+        #if chamber.is_front == True:
+        #    ax.plot(p_z, p_x, p_y, c="red")
+        #if chamber.is_front == False:
+        #    ax.plot(p_z, p_x, p_y, c="blue")
     ax.set_xlim(station_mean_z - 30, station_mean_z + 30)
     plt.plot([], [], c='red', label='front chamber')
     plt.plot([], [], c='blue', label='back chamber')
@@ -63,9 +63,9 @@ for station in stations:
     ax.set_ylabel('axis-X', fontsize=plotting_size*12)
     ax.set_zlabel('axis-Y', fontsize=plotting_size*12)
     ax.view_init(elev=20, azim=225)
-    ax.add_artist(offsetbox.AnchoredText(f'Source: {source}',
-                                         loc='upper left',
-                                         prop=dict(size=plotting_size*10)))
+    #ax.add_artist(offsetbox.AnchoredText(f'Source: {source}',
+    #                                     loc='upper left',
+    #                                     prop=dict(size=plotting_size*10)))
     anim = FuncAnimation(fig, update, frames=180, interval=200)
     output_path = output_dir / station
     anim.save(output_path.with_suffix('.gif'), fps=10)
