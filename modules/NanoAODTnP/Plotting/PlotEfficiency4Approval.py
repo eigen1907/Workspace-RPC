@@ -159,7 +159,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
         label1 = f'Preliminary',
         mid_label = f'RPC {region}',
         mid_label_loc = (0.05, 0.90),
-        label2 = r'$62.6\ fb^{-1}$',
+        #label2 = r'$62.6\ fb^{-1}$',
         loc = 0,
         xlabel = 'Efficiency [%]',
         ylabel = 'Number of Rolls',
@@ -200,34 +200,34 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     extra = Rectangle((0, 0), 0.1, 0.1, fc='w', fill=False, edgecolor='none', linewidth=0)
     header_row = ['',
                   '',
-                  r'$Mean_{>70\ \%}$',
-                  r'$Mean$',
+                  r'$Mean\ (>70\ \%)$',
+                  #r'$Mean$',
                   #r'$N_{total}$',
                   #r'$N_{\leq70\ \%}$',
-                  r'$\%_{\leq70\ \%}$',
+                  r'$\%\ (\leq70\ \%)$',
                   #r'$N_{excluded}$',]
-                  r'$\%_{excluded}$',]
-
+                  #r'$\%_{excluded}$',]
+    ]
     data_1_row = ['', 
                   r'$2022\ (34.7\ fb^{-1})$', 
-                  f'{np.mean(eff_1[eff_1 > 70]):.1f} %',
-                  f'{np.mean(eff_1):.1f} %', 
+                  f'       {np.mean(eff_1[eff_1 > 70]):.1f} %',
+                  #f'{np.mean(eff_1):.1f} %', 
                   #f'{n_total_1}',
                   #f'{n_eff_under_70_1} ({n_eff_under_70_1/n_total_1*100:.1f} %)',
                   #f'{n_excluded_1} ({n_excluded_1/n_total_1*100:.1f} %)',]
-                  f'{n_eff_under_70_1/n_total_1*100:.1f} %',
-                  f'{n_excluded_1/n_total_1*100:.1f} %',]
-
+                  f'     {n_eff_under_70_1/n_total_1*100:.1f} %',
+                  #f'{n_excluded_1/n_total_1*100:.1f} %',]
+    ]
     data_2_row = ['', 
                   r'$2023\ (27.9\ fb^{-1})$', 
-                  f'{np.mean(eff_2[eff_2 > 70]):.1f} %',
-                  f'{np.mean(eff_2):.1f} %', 
+                  f'       {np.mean(eff_2[eff_2 > 70]):.1f} %',
+                  #f'{np.mean(eff_2):.1f} %', 
                   #f'{n_total_2}',
                   #f'{n_eff_under_70_2} ({n_eff_under_70_2/n_total_2*100:.1f} %)',
                   #f'{n_excluded_2} ({n_excluded_2/n_total_2*100:.1f} %)',]
-                  f'{n_eff_under_70_2/n_total_2*100:.1f} %',
-                  f'{n_excluded_2/n_total_2*100:.1f} %',]
-
+                  f'     {n_eff_under_70_2/n_total_2*100:.1f} %',
+                  #f'{n_excluded_2/n_total_2*100:.1f} %',]
+    ]
     legend_handles, legend_values = [], []
     for idx in range(len(header_row)):
         if idx == 0:
@@ -238,7 +238,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
 
     ax.legend(legend_handles, legend_values,
               ncol = len(header_row), columnspacing = 0.0,
-              handletextpad = -0.6, handlelength = 1.5, handleheight = 1.5,
+              handletextpad = -0.6, handlelength = 2.0, handleheight = 1.4,
               #alignment = 'center', loc = 'center left', fontsize = 18)
               alignment = 'center', loc = (0.01, 0.45), fontsize = 18)
     output_path = Path(output_path)
@@ -416,7 +416,8 @@ def hist_tnp_mass(input_path1, input_path2, output_path):
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize=(12, 8))
     #mh.cms.label(ax=ax, llabel=f'Preliminary', com=r'$\sqrt{s} = 13.6$', year="2022, 2023", loc=2, fontsize=22)
-    mh.cms.label(ax=ax, llabel=f'Preliminary', year=r'$62.6\ fb^{-1}$',com=13.6, loc=0, fontsize=24)
+    #mh.cms.label(ax=ax, llabel=f'Preliminary', year=r'$62.6\ fb^{-1}$',com=13.6, loc=0, fontsize=24)
+    mh.cms.label(ax=ax, llabel=f'Preliminary', com=13.6, loc=0, fontsize=24)
     ax.set_xlabel(r'$\mu^{+}\mu^{-}$ (tag-probe) invariant mass [GeV]', fontsize=22)
     ax.set_ylabel('Events / 0.5 GeV', fontsize=22)
     ax.set_xlim(70, 110)
