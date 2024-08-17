@@ -20,11 +20,9 @@ from matplotlib.patches import Rectangle
 def init_figure(
     figsize: tuple = (8, 6),
     fontsize: float = 20,
+    year: Optional[str] = None,
     com: float = 13.6,
     label1: str = 'Preliminary',
-    label2: Optional[str] = None,
-    mid_label: Optional[str] = None,
-    mid_label_loc: Optional = (0.2, 1.015),
     lumi: Optional[float] = None,
     lumi_format = "{0: .1f}",
     loc: int = 2,
@@ -39,13 +37,10 @@ def init_figure(
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize = figsize)
     mh.cms.label(ax=ax, data=True, llabel=label1, loc=loc,
-                 year=label2, com=com, fontsize=fontsize,
+                 year=year, com=com, fontsize=fontsize,
                  lumi=lumi, lumi_format=lumi_format)
     ax.set_xlabel(xlabel, fontsize=fontsize)
     ax.set_ylabel(ylabel, fontsize=fontsize)
-    if mid_label is not None:
-        ax.annotate(mid_label, mid_label_loc, weight='bold',
-                    xycoords='axes fraction', fontsize=fontsize, horizontalalignment='left')
     if xlim is not None:
         ax.set_xlim(xlim)
     if ylim is not None:    
@@ -109,6 +104,55 @@ def get_region_params(region: str) -> dict:
         'hatches': hatches
     }
 
+def hist_tnp_mass(input_path1, input_path2, output_path):
+    mass_2022 = uproot.open(f"{input_path1}:muon_tree/dimuon_mass").array(library="np")
+    mass_2023 = uproot.open(f"{input_path2}:muon_tree/dimuon_mass").array(library="np")
+
+    mh.style.use(mh.styles.CMS)
+    fig, ax = plt.subplots(figsize=(12, 8))
+    mh.cms.label(ax=ax, llabel=f'Preliminary', year='Run 3', com=13.6, loc=0, fontsize=24)
+    ax.set_xlabel(r'$\mu^{+}\mu^{-}$ (tag-probe) invariant mass [GeV]', fontsize=22)
+    ax.set_ylabel('Events / 0.5 GeV', fontsize=22)
+    ax.set_xlim(70, 110)
+    ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0), useMathText=True)
+    ax.yaxis.offsetText.set_visible(False)
+    ax.annotate(r'$x10^{6}$', (-0.06, 1.0), #weight='bold',
+                xycoords='axes fraction', fontsize=18, horizontalalignment='left')
+
+
+    h_mass_2022 = Hist(Regular(80, 70, 110))
+    h_mass_2023 = Hist(Regular(80, 70, 110))
+
+    h_mass_2022.fill(mass_2022)
+    h_mass_2023.fill(mass_2023)
+
+    h_mass_2022.plot(ax = ax,
+                     yerr = False,
+                     histtype="step",
+                     edgecolor='firebrick',
+                     linewidth=3,
+                     hatch='\\\\',
+                     flow=None,
+                     label=r"$2022\ (34.7\ fb^{-1})$",
+                     alpha=0.9)
+
+    h_mass_2023.plot(ax = ax,
+                     yerr = False,
+                     histtype="step",
+                     edgecolor='mediumblue',
+                     linewidth=3,
+                     hatch='//',
+                     flow=None,
+                     label=r"$2023\ (27.9\ fb^{-1})$",
+                     alpha=0.9)
+
+    ax.legend(fontsize=24, handleheight = 1.2)
+
+    if not output_path.parent.exists():
+        output_path.parent.mkdir(parents=True)
+    fig.savefig(output_path)
+    plt.close(fig)
+
 def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     total_by_roll_1 = uproot.open(f'{input_path_1}:total_by_roll').to_hist()
     passed_by_roll_1 = uproot.open(f'{input_path_1}:passed_by_roll').to_hist()
@@ -155,11 +199,9 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     fig, ax = init_figure(
         figsize = (12, 8),
         fontsize = 24,
+        year = 'Run 3',
         com = 13.6,
         label1 = f'Preliminary',
-        mid_label = f'RPC {region}',
-        mid_label_loc = (0.05, 0.90),
-        #label2 = r'$62.6\ fb^{-1}$',
         loc = 0,
         xlabel = 'Efficiency [%]',
         ylabel = 'Number of Rolls',
@@ -168,14 +210,18 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
         xticks = None,
         yticks = None,
         log_scale = False,
-        #lumi=62.6,
     )
+    ax.annotate(f'Tag-and-Probe method', (0.96, 0.90), #weight='bold',
+                xycoords='axes fraction', fontsize=24, horizontalalignment='right')
+    
+    ax.annotate(f'RPC {region}', (0.04, 0.90), #weight='bold',
+                xycoords='axes fraction', fontsize=24, horizontalalignment='left')
+    
 
     count_1, bins_1, patch_1 = ax.hist(eff_1[eff_1 > 0], 
                                        bins = 200, 
                                        range = (0, 100),
                                        facecolor = region_params['facecolors'][0],
-                                       #facecolor = 'w',
                                        edgecolor = region_params['edgecolors'][0],
                                        hatch = region_params['hatches'][1],
                                        alpha = 1.0,
@@ -187,7 +233,6 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     count_2, bins_2, patch_2 = ax.hist(eff_2[eff_2 > 0], 
                                        bins = 200,
                                        range = (0, 100),
-                                       #facecolor = region_params['facecolors'][1],
                                        facecolor = 'w',
                                        edgecolor = region_params['edgecolors'][1],
                                        hatch = region_params['hatches'][0],
@@ -195,38 +240,25 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
                                        align = 'mid',
                                        density = False,
                                        linewidth = 2.0,
-                                       #histtype = 'stepfilled')
-                                        histtype = 'step')
+                                       histtype = 'step')
+
+    ax.set_ylim(0, np.max(np.concatenate((count_1, count_2))*1.2))
+    
     extra = Rectangle((0, 0), 0.1, 0.1, fc='w', fill=False, edgecolor='none', linewidth=0)
     header_row = ['',
                   '',
                   r'$Mean\ (>70\ \%)$',
-                  #r'$Mean$',
-                  #r'$N_{total}$',
-                  #r'$N_{\leq70\ \%}$',
                   r'$\%\ (\leq70\ \%)$',
-                  #r'$N_{excluded}$',]
-                  #r'$\%_{excluded}$',]
     ]
     data_1_row = ['', 
                   r'$2022\ (34.7\ fb^{-1})$', 
                   f'       {np.mean(eff_1[eff_1 > 70]):.1f} %',
-                  #f'{np.mean(eff_1):.1f} %', 
-                  #f'{n_total_1}',
-                  #f'{n_eff_under_70_1} ({n_eff_under_70_1/n_total_1*100:.1f} %)',
-                  #f'{n_excluded_1} ({n_excluded_1/n_total_1*100:.1f} %)',]
                   f'     {n_eff_under_70_1/n_total_1*100:.1f} %',
-                  #f'{n_excluded_1/n_total_1*100:.1f} %',]
     ]
     data_2_row = ['', 
                   r'$2023\ (27.9\ fb^{-1})$', 
                   f'       {np.mean(eff_2[eff_2 > 70]):.1f} %',
-                  #f'{np.mean(eff_2):.1f} %', 
-                  #f'{n_total_2}',
-                  #f'{n_eff_under_70_2} ({n_eff_under_70_2/n_total_2*100:.1f} %)',
-                  #f'{n_excluded_2} ({n_excluded_2/n_total_2*100:.1f} %)',]
                   f'     {n_eff_under_70_2/n_total_2*100:.1f} %',
-                  #f'{n_excluded_2/n_total_2*100:.1f} %',]
     ]
     legend_handles, legend_values = [], []
     for idx in range(len(header_row)):
@@ -237,10 +269,9 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
         legend_values += [header_row[idx], data_1_row[idx], data_2_row[idx]]
 
     ax.legend(legend_handles, legend_values,
-              ncol = len(header_row), columnspacing = 0.0,
-              handletextpad = -0.6, handlelength = 2.0, handleheight = 1.4,
-              #alignment = 'center', loc = 'center left', fontsize = 18)
-              alignment = 'center', loc = (0.01, 0.45), fontsize = 18)
+              ncol = len(header_row), columnspacing = -0.6,
+              handletextpad = -0.3, handlelength = 2.0, handleheight = 1.6,
+              alignment = 'center', loc = (0.03, 0.55), fontsize = 18)
     output_path = Path(output_path)
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
@@ -335,7 +366,7 @@ def plot_eff_by_time_run3(input_path,
         fontsize = 34,
         com = r'$\sqrt{s} = 13.6$',
         label1 = 'Preliminary',
-        label2 = "2022 & 2023 pp Data",
+        year = "2022 & 2023 pp Data",
         lumi = lumi,
         #mid_label = f'{mid_label}',
         loc = 0,
@@ -403,63 +434,6 @@ def plot_eff_by_time_run3(input_path,
     
     ax.grid()
     plt.tight_layout()
-
-    if not output_path.parent.exists():
-        output_path.parent.mkdir(parents=True)
-    fig.savefig(output_path)
-    plt.close(fig)
-
-def hist_tnp_mass(input_path1, input_path2, output_path):
-    mass_2022 = uproot.open(f"{input_path1}:muon_tree/dimuon_mass").array(library="np")
-    mass_2023 = uproot.open(f"{input_path2}:muon_tree/dimuon_mass").array(library="np")
-
-    mh.style.use(mh.styles.CMS)
-    fig, ax = plt.subplots(figsize=(12, 8))
-    #mh.cms.label(ax=ax, llabel=f'Preliminary', com=r'$\sqrt{s} = 13.6$', year="2022, 2023", loc=2, fontsize=22)
-    #mh.cms.label(ax=ax, llabel=f'Preliminary', year=r'$62.6\ fb^{-1}$',com=13.6, loc=0, fontsize=24)
-    mh.cms.label(ax=ax, llabel=f'Preliminary', com=13.6, loc=0, fontsize=24)
-    ax.set_xlabel(r'$\mu^{+}\mu^{-}$ (tag-probe) invariant mass [GeV]', fontsize=22)
-    ax.set_ylabel('Events / 0.5 GeV', fontsize=22)
-    ax.set_xlim(70, 110)
-    ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0), useMathText=True)
-    ax.yaxis.offsetText.set_visible(False)
-    ax.annotate(r'$x10^{6}$', (-0.06, 1.0), #weight='bold',
-                xycoords='axes fraction', fontsize=18, horizontalalignment='left')
-
-
-    h_mass_2022 = Hist(Regular(80, 70, 110))
-    h_mass_2023 = Hist(Regular(80, 70, 110))
-
-    h_mass_2022.fill(mass_2022)
-    h_mass_2023.fill(mass_2023)
-
-    h_mass_2022.plot(ax = ax,
-                     yerr = False,
-                     histtype="step",
-                     #edgecolor='purple',
-                     edgecolor='firebrick',
-                     #facecolor='gray',
-                     #facecolor='w',
-                     linewidth=3,
-                     hatch='\\\\',
-                     flow=None,
-                     label=r"$2022\ (34.7\ fb^{-1})$",
-                     alpha=0.9)
-
-    h_mass_2023.plot(ax = ax,
-                     yerr = False,
-                     histtype="step",
-                     #edgecolor='darkorange',
-                     edgecolor='mediumblue',
-                     #facecolor='black',
-                     #facecolor='w',
-                     linewidth=3,
-                     hatch='//',
-                     flow=None,
-                     label=r"$2023\ (27.9\ fb^{-1})$",
-                     alpha=0.9)
-
-    ax.legend(fontsize=24, handleheight = 1.2)
 
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
