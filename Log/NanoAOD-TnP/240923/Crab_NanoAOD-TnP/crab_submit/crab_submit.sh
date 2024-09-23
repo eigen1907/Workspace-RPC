@@ -3,4 +3,4 @@ rpc-tnp-crab-submit.py \
     -i ${CMSSW_BASE}/src/RPCDPGAnalysis/NanoAODTnP/data/crab/Run3.json \
     -s T3_CH_CERNBOX \
     -u joshin \
-    -n TnP-NanoAOD
+    -n RPC-TnP-NanoAOD
