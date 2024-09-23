@@ -1,0 +1,11 @@
+<use name="DataFormats/TrackReco"/>
+<use name="DataFormats/MuonReco"/>
+
+<use name="Geometry/RPCGeometry" />
+
+<use name="CommonTools/UtilAlgos"/>
+
+<use name="FWCore/Framework"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/PluginManager"/>
+<flags EDM_PLUGIN="1"/>

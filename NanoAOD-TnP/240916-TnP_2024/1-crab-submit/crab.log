@@ -1,0 +1,248 @@
+DEBUG 2024-09-11 10:38:18.537 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-11 10:38:18.538 UTC: 	 Running on: Linux lxplus937.cern.ch 5.14.0-427.31.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Aug 9 14:06:03 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-11 10:38:18.538 UTC: 	 Executing command: 'status'
+DEBUG 2024-09-11 10:38:18.538 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-15 20:36:34.793 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-15 20:36:34.793 UTC: 	 Running on: Linux lxplus942.cern.ch 5.14.0-427.31.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Aug 9 14:06:03 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-15 20:36:34.793 UTC: 	 Executing command: 'resubmit'
+DEBUG 2024-09-15 20:36:34.795 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-15 20:39:17.489 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-15 20:39:17.489 UTC: 	 Running on: Linux lxplus942.cern.ch 5.14.0-427.31.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Aug 9 14:06:03 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-15 20:39:17.489 UTC: 	 Executing command: 'resubmit'
+DEBUG 2024-09-15 20:39:17.489 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-15 20:41:02.269 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-15 20:41:02.270 UTC: 	 Running on: Linux lxplus942.cern.ch 5.14.0-427.31.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Aug 9 14:06:03 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-15 20:41:02.270 UTC: 	 Executing command: 'resubmit'
+DEBUG 2024-09-15 20:41:02.270 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-16 13:32:31.473 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 13:32:31.474 UTC: 	 Running on: Linux lxplus925.cern.ch 5.14.0-427.24.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Jun 23 11:48:35 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 13:32:31.474 UTC: 	 Executing command: 'resubmit'
+DEBUG 2024-09-16 13:32:31.478 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-16 13:32:43.612 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 13:32:43.612 UTC: 	 Running on: Linux lxplus925.cern.ch 5.14.0-427.24.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Jun 23 11:48:35 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 13:32:43.612 UTC: 	 Executing command: 'remake'
+DEBUG 2024-09-16 13:32:43.613 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-16 13:54:49.907 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 13:54:49.907 UTC: 	 Running on: Linux lxplus925.cern.ch 5.14.0-427.24.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Jun 23 11:48:35 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 13:54:49.907 UTC: 	 Executing command: 'remake'
+DEBUG 2024-09-16 13:54:49.907 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-16 14:03:29.276 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 14:03:29.277 UTC: 	 Running on: Linux lxplus925.cern.ch 5.14.0-427.24.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Jun 23 11:48:35 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 14:03:29.277 UTC: 	 Executing command: 'remake'
+DEBUG 2024-09-16 14:03:29.277 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+WARNING 2024-09-16 14:03:29.278 UTC: 	 Warning: 'crab remake' command takes no arguments, 1 given. Ignoring arguments ['task=240910_162523:joshin_crab_muRPCTnPFlatTableProducer_cfg__Muon1__Run2024F-PromptReco-v1__240910-182518'].
+DEBUG 2024-09-16 14:03:29.278 UTC: 	 Checking credentials
+DEBUG 2024-09-16 14:03:29.278 UTC: 	 Found proxy file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:03:29.278 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2024-09-16 14:03:29.278 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:03:29.839 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:03:29.839 UTC: 	 Getting proxy life time left
+DEBUG 2024-09-16 14:03:29.839 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:03:30.405 UTC: 	 output : 41290
+41289
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:03:30.405 UTC: 	 Proxy valid for 11:28:09 hours
+DEBUG 2024-09-16 14:03:30.405 UTC: 	 Encoded data for curl request: subresource=delegatedn
+DEBUG 2024-09-16 14:03:30.486 UTC: 	 Registering user credentials on myproxy for /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+DEBUG 2024-09-16 14:03:30.487 UTC: 	 Executing command :
+ voms-proxy-info --identity --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:03:31.093 UTC: 	 output : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:03:31.094 UTC: 	 Getting myproxy life time left for 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-09-16 14:03:31.094 UTC: 	 Executing command :
+ myproxy-info -s myproxy.cern.ch -l 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-09-16 14:03:31.433 UTC: 	 output : username: 68229ae13e97b0dfc488515366c6ed3e6420d124
+owner: /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+  renewal policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  trusted retrieval policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  timeleft: 578:18:00  (24.1 days)
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:03:31.433 UTC: 	 Myproxy is valid: 2081880
+DEBUG 2024-09-16 14:03:31.433 UTC: 	 Result of myproxy credential check:
+  Credential exists on myproxy: username: 68229ae13e97b0dfc488515366c6ed3e6420d124  - validity: 24 days, 2:18:00
+ERROR 2024-09-16 14:03:31.433 UTC: 	 Error: Please specify the task name for which to remake a CRAB project directory. Use the --task option.
+ERROR 2024-09-16 14:03:31.433 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 152, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/SubCommand.py", line 402, in __init__
+    self.validateOptions()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/remake.py", line 76, in validateOptions
+    raise ex
+CRABClient.ClientExceptions.MissingOptionException: [91mError[0m: Please specify the task name for which to remake a CRAB project directory. Use the --task option.
+INFO 2024-09-16 14:03:31.437 UTC: 	 Log file is /afs/cern.ch/user/j/joshin/public/Workspace-RPC/240910-TnP_2024/240910-produce_tnp/step1-crab_submit/crab.log
+DEBUG 2024-09-16 14:04:05.205 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 14:04:05.205 UTC: 	 Running on: Linux lxplus925.cern.ch 5.14.0-427.24.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Jun 23 11:48:35 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 14:04:05.205 UTC: 	 Executing command: 'remake'
+DEBUG 2024-09-16 14:04:05.205 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+WARNING 2024-09-16 14:04:05.206 UTC: 	 Warning: 'crab remake' command takes no arguments, 2 given. Ignoring arguments ['/afs/cern.ch/user/j/joshin/public/Workspace-RPC/240910-TnP_2024/240910-produce_tnp/step1-crab_submit/crab_muRPCTnPFlatTableProducer_cfg__Muon1__Run2024F-PromptReco-v1__240910-182518', 'task=240910_162523:joshin_crab_muRPCTnPFlatTableProducer_cfg__Muon1__Run2024F-PromptReco-v1__240910-182518'].
+DEBUG 2024-09-16 14:04:05.206 UTC: 	 Checking credentials
+DEBUG 2024-09-16 14:04:05.206 UTC: 	 Found proxy file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:04:05.206 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2024-09-16 14:04:05.206 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:04:05.742 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:04:05.742 UTC: 	 Getting proxy life time left
+DEBUG 2024-09-16 14:04:05.742 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:04:06.285 UTC: 	 output : 41254
+41253
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:04:06.285 UTC: 	 Proxy valid for 11:27:33 hours
+DEBUG 2024-09-16 14:04:06.285 UTC: 	 Encoded data for curl request: subresource=delegatedn
+DEBUG 2024-09-16 14:04:06.363 UTC: 	 Registering user credentials on myproxy for /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+DEBUG 2024-09-16 14:04:06.364 UTC: 	 Executing command :
+ voms-proxy-info --identity --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:04:06.891 UTC: 	 output : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:04:06.891 UTC: 	 Getting myproxy life time left for 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-09-16 14:04:06.891 UTC: 	 Executing command :
+ myproxy-info -s myproxy.cern.ch -l 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-09-16 14:04:07.309 UTC: 	 output : username: 68229ae13e97b0dfc488515366c6ed3e6420d124
+owner: /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+  renewal policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  trusted retrieval policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  timeleft: 578:17:24  (24.1 days)
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:04:07.309 UTC: 	 Myproxy is valid: 2081820
+DEBUG 2024-09-16 14:04:07.309 UTC: 	 Result of myproxy credential check:
+  Credential exists on myproxy: username: 68229ae13e97b0dfc488515366c6ed3e6420d124  - validity: 24 days, 2:17:00
+ERROR 2024-09-16 14:04:07.309 UTC: 	 Error: Please specify the task name for which to remake a CRAB project directory. Use the --task option.
+ERROR 2024-09-16 14:04:07.309 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 152, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/SubCommand.py", line 402, in __init__
+    self.validateOptions()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/remake.py", line 76, in validateOptions
+    raise ex
+CRABClient.ClientExceptions.MissingOptionException: [91mError[0m: Please specify the task name for which to remake a CRAB project directory. Use the --task option.
+INFO 2024-09-16 14:04:07.320 UTC: 	 Log file is /afs/cern.ch/user/j/joshin/public/Workspace-RPC/240910-TnP_2024/240910-produce_tnp/step1-crab_submit/crab.log
+DEBUG 2024-09-16 14:32:22.543 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 14:32:22.543 UTC: 	 Running on: Linux lxplus925.cern.ch 5.14.0-427.24.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Jun 23 11:48:35 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 14:32:22.543 UTC: 	 Executing command: 'remake'
+DEBUG 2024-09-16 14:32:22.546 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-16 14:32:22.560 UTC: 	 Checking credentials
+DEBUG 2024-09-16 14:32:22.560 UTC: 	 Found proxy file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:32:22.560 UTC: 	 Making sure it has proper VOMS extension
+DEBUG 2024-09-16 14:32:22.560 UTC: 	 Executing command :
+ voms-proxy-info --vo --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:32:23.425 UTC: 	 output : cms
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:32:23.426 UTC: 	 Getting proxy life time left
+DEBUG 2024-09-16 14:32:23.426 UTC: 	 Executing command :
+ voms-proxy-info --actimeleft --timeleft --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:32:23.995 UTC: 	 output : 39557
+39556
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:32:23.995 UTC: 	 Proxy valid for 10:59:16 hours
+DEBUG 2024-09-16 14:32:23.996 UTC: 	 Encoded data for curl request: subresource=delegatedn
+DEBUG 2024-09-16 14:32:24.097 UTC: 	 Registering user credentials on myproxy for /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+DEBUG 2024-09-16 14:32:24.097 UTC: 	 Executing command :
+ voms-proxy-info --identity --file /tmp/x509up_u141493
+DEBUG 2024-09-16 14:32:24.666 UTC: 	 output : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:32:24.666 UTC: 	 Getting myproxy life time left for 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-09-16 14:32:24.666 UTC: 	 Executing command :
+ myproxy-info -s myproxy.cern.ch -l 68229ae13e97b0dfc488515366c6ed3e6420d124
+DEBUG 2024-09-16 14:32:24.992 UTC: 	 output : username: 68229ae13e97b0dfc488515366c6ed3e6420d124
+owner: /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=joshin/CN=852809/CN=Jongwon Shin
+  renewal policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  trusted retrieval policy: /DC=ch/DC=cern/OU=computers/CN=crab-(preprod|prod)-tw(01|02).cern.ch|/DC=ch/DC=cern/OU=computers/CN=crab-dev-tw(01|02|03|04).cern.ch|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=cmscrab/CN=(817881|373708)/CN=Robot: cms crab|/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=crabint1/CN=373708/CN=Robot: CMS CRAB Integration 1
+  timeleft: 577:49:07  (24.1 days)
+
+ error: 
+ retcode : 0
+DEBUG 2024-09-16 14:32:24.992 UTC: 	 Myproxy is valid: 2080140
+DEBUG 2024-09-16 14:32:24.992 UTC: 	 Result of myproxy credential check:
+  Credential exists on myproxy: username: 68229ae13e97b0dfc488515366c6ed3e6420d124  - validity: 24 days, 1:49:00
+DEBUG 2024-09-16 14:32:24.993 UTC: 	 Command use: remake
+DEBUG 2024-09-16 14:32:24.993 UTC: 	 Options use: ['--task=240910_162523:joshin_crab_muRPCTnPFlatTableProducer_cfg__Muon1__Run2024F-PromptReco-v1__240910-182518']
+DEBUG 2024-09-16 14:32:24.993 UTC: 	 Encoded data for curl request: subresource=version
+DEBUG 2024-09-16 14:32:25.103 UTC: 	 CRABClient version: v3.240621
+DEBUG 2024-09-16 14:32:25.103 UTC: 	 Instance is prod
+DEBUG 2024-09-16 14:32:25.103 UTC: 	 Server base url is cmsweb.cern.ch
+DEBUG 2024-09-16 14:32:25.103 UTC: 	 Command api workflow
+WARNING 2024-09-16 14:32:25.103 UTC: 	 ATTENTION return value for 'remake' has been changed to a dictionary
+ format is {'commandStatus': 'SUCCESS' or 'FAILED',
+            'workDir': name of the work directory created}
+INFO 2024-09-16 14:32:25.103 UTC: 	 Warning: crab_muRPCTnPFlatTableProducer_cfg__Muon1__Run2024F-PromptReco-v1__240910-182518/.requestcache not created, because it already exists.
+INFO 2024-09-16 14:32:25.143 UTC: 	 Log file is /afs/cern.ch/user/j/joshin/public/Workspace-RPC/240910-TnP_2024/240910-produce_tnp/step1-crab_submit/crab.log
+DEBUG 2024-09-16 14:43:37.855 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 14:43:37.855 UTC: 	 Running on: Linux lxplus996.cern.ch 5.14.0-427.28.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jul 19 14:40:47 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 14:43:37.855 UTC: 	 Executing command: 'remake'
+DEBUG 2024-09-16 14:43:37.862 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-16 15:35:57.915 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-16 15:35:57.915 UTC: 	 Running on: Linux lxplus934.cern.ch 5.14.0-427.26.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jul 5 11:34:54 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-16 15:35:57.915 UTC: 	 Executing command: 'report'
+DEBUG 2024-09-16 15:35:57.915 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-19 15:06:23.242 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-19 15:06:23.242 UTC: 	 Running on: Linux lxplus912.cern.ch 5.14.0-427.31.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Aug 9 14:06:03 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-19 15:06:23.242 UTC: 	 Executing command: 'kill'
+DEBUG 2024-09-19 15:06:23.245 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+ERROR 2024-09-19 15:06:23.259 UTC: 	 Error: crab_muRPCTnPFlatTableProducer_cfg__Muon1__Run2024F-PromptReco-v1__24091 is not a valid CRAB project directory.
+ERROR 2024-09-19 15:06:23.260 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 152, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/SubCommand.py", line 280, in __init__
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/SubCommand.py", line 680, in validateOptions
+    raise ConfigurationException(msg)
+CRABClient.ClientExceptions.ConfigurationException: [91mError[0m: crab_muRPCTnPFlatTableProducer_cfg__Muon1__Run2024F-PromptReco-v1__24091 is not a valid CRAB project directory.
+INFO 2024-09-19 15:06:23.317 UTC: 	 Log file is /afs/cern.ch/user/j/joshin/public/Workspace-RPC/240916-TnP_2024/step1-crab_submit/crab.log
+DEBUG 2024-09-23 10:17:35.228 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-23 10:17:35.229 UTC: 	 Running on: Linux lxplus994.cern.ch 5.14.0-427.26.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jul 5 11:34:54 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-23 10:17:35.229 UTC: 	 Executing command: 'resubmit'
+DEBUG 2024-09-23 10:17:35.249 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+DEBUG 2024-09-23 10:21:27.745 UTC: 	 CRAB Client version: v3.240621
+DEBUG 2024-09-23 10:21:27.746 UTC: 	 Running on: Linux lxplus994.cern.ch 5.14.0-427.26.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jul 5 11:34:54 EDT 2024 x86_64 x86_64 x86_64 GNU/Linux - Red Hat Enterprise Linux 9.4 (Plow)
+DEBUG 2024-09-23 10:21:27.746 UTC: 	 Executing command: 'resubmit'
+DEBUG 2024-09-23 10:21:27.746 UTC: 	 Found CRAB cache file /afs/cern.ch/user/j/joshin/.crab3
+ERROR 2024-09-23 10:21:27.746 UTC: 	 Error: 'crab resubmit' command accepts at most 1 argument (a path to a CRAB project directory), 2 given.
+ERROR 2024-09-23 10:21:27.746 UTC: 	 Caught ClientException exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 152, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/bin/crab.py", line 135, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/resubmit.py", line 30, in __init__
+    SubCommand.__init__(self, logger, cmdargs)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/SubCommand.py", line 280, in __init__
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/share/cms/crab-prod/v3.240621.01/lib/CRABClient/Commands/SubCommand.py", line 660, in validateOptions
+    raise ConfigurationException(msg)
+CRABClient.ClientExceptions.ConfigurationException: [91mError[0m: 'crab resubmit' command accepts at most 1 argument (a path to a CRAB project directory), 2 given.
+INFO 2024-09-23 10:21:27.749 UTC: 	 Log file is /afs/cern.ch/user/j/joshin/public/Workspace-RPC/240916-TnP_2024/step1-crab_submit/crab.log
