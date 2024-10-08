@@ -1,0 +1,43 @@
+000 (15951787.032.000) 10/07 08:18:27 Job submitted from host: <188.185.72.155:9618?addrs=188.185.72.155-9618+[2001-1458-d00-8--100-95]-9618&alias=bigbird08.cern.ch&noUDP&sock=schedd_4988_ee7c>
+...
+040 (15951787.032.000) 10/07 08:21:39 Started transferring input files
+	Transferring to host: <188.185.196.137:9618?addrs=188.185.196.137-9618+[2001-1458-303-23--100-85]-9618&alias=b9p16p3761.cern.ch&noUDP&sock=slot1_28_1158882_f4cf_63173>
+...
+040 (15951787.032.000) 10/07 08:21:39 Finished transferring input files
+...
+001 (15951787.032.000) 10/07 08:21:40 Job executing on host: <188.185.196.137:9618?addrs=188.185.196.137-9618+[2001-1458-303-23--100-85]-9618&alias=b9p16p3761.cern.ch&noUDP&sock=startd_127972_b9e9>
+	SlotName: slot1_28@b9p16p3761.cern.ch
+	CondorScratchDir = "/pool/condor/dir_1327311"
+	Cpus = 1
+	Disk = 2970365
+	Memory = 2000
+...
+006 (15951787.032.000) 10/07 08:21:48 Image size of job updated: 1
+	0  -  MemoryUsage of job (MB)
+	0  -  ResidentSetSize of job (KB)
+...
+006 (15951787.032.000) 10/07 08:22:19 Image size of job updated: 585928
+	62  -  MemoryUsage of job (MB)
+	62940  -  ResidentSetSize of job (KB)
+...
+040 (15951787.032.000) 10/07 08:22:19 Started transferring output files
+...
+040 (15951787.032.000) 10/07 08:22:19 Finished transferring output files
+...
+005 (15951787.032.000) 10/07 08:22:19 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:10, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:10, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	5884  -  Run Bytes Sent By Job
+	778  -  Run Bytes Received By Job
+	5884  -  Total Bytes Sent By Job
+	778  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :       28        1   2970365 
+	   Memory (MB)          :       62     2000      2000 
+
+	Job terminated of its own accord at 2024-10-07T06:22:19Z with exit-code 0.
+...

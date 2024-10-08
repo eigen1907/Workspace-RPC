@@ -1,0 +1,43 @@
+000 (15951787.030.000) 10/07 08:18:27 Job submitted from host: <188.185.72.155:9618?addrs=188.185.72.155-9618+[2001-1458-d00-8--100-95]-9618&alias=bigbird08.cern.ch&noUDP&sock=schedd_4988_ee7c>
+...
+040 (15951787.030.000) 10/07 08:21:41 Started transferring input files
+	Transferring to host: <188.185.193.151:9618?addrs=188.185.193.151-9618+[2001-1458-303-20--100-93]-9618&alias=b9p19p9652.cern.ch&noUDP&sock=slot1_23_4073702_5551_2925>
+...
+040 (15951787.030.000) 10/07 08:21:41 Finished transferring input files
+...
+001 (15951787.030.000) 10/07 08:21:42 Job executing on host: <188.185.193.151:9618?addrs=188.185.193.151-9618+[2001-1458-303-20--100-93]-9618&alias=b9p19p9652.cern.ch&noUDP&sock=startd_128493_16c1>
+	SlotName: slot1_23@b9p19p9652.cern.ch
+	CondorScratchDir = "/pool/condor/dir_1791812"
+	Cpus = 1
+	Disk = 2965211
+	Memory = 2000
+...
+006 (15951787.030.000) 10/07 08:21:50 Image size of job updated: 1
+	0  -  MemoryUsage of job (MB)
+	0  -  ResidentSetSize of job (KB)
+...
+006 (15951787.030.000) 10/07 08:22:17 Image size of job updated: 662396
+	81  -  MemoryUsage of job (MB)
+	82528  -  ResidentSetSize of job (KB)
+...
+040 (15951787.030.000) 10/07 08:22:17 Started transferring output files
+...
+040 (15951787.030.000) 10/07 08:22:17 Finished transferring output files
+...
+005 (15951787.030.000) 10/07 08:22:17 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:06, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:06, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	5884  -  Run Bytes Sent By Job
+	778  -  Run Bytes Received By Job
+	5884  -  Total Bytes Sent By Job
+	778  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :       28        1   2965211 
+	   Memory (MB)          :       81     2000      2000 
+
+	Job terminated of its own accord at 2024-10-07T06:22:17Z with exit-code 0.
+...
