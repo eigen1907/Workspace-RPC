@@ -1,6 +1,0 @@
-Universe   = vanilla
-Executable = flatten-condor-execute.sh
-Arguments  = --cmssw_base /afs/cern.ch/user/j/joshin/public/RPCEffTnP/CMSSW_14_1_0/src --cert Run2022/Cert_Collisions2022_355100_362760_Golden.json --geometry run3.csv --store /eos/user/j/joshin --output $(output) --output_flatten $(output_flatten)
-Log        = SingleMuon-Run2022B-27Jun2023-v1/process-$(Process).log
-Error      = SingleMuon-Run2022B-27Jun2023-v1/process-$(Process).err
-Queue output, output_flatten from SingleMuon-Run2022B-27Jun2023-v1/condor.dat
