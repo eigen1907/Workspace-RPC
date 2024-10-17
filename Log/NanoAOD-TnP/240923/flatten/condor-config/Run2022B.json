@@ -1,8 +1,0 @@
-[
-    {
-        "primary_dataset": "SingleMuon",
-        "proceed_dataset": "Run2022B-27Jun2023-v1",
-        "cert": "Run2022/Cert_Collisions2022_355100_362760_Golden.json",
-        "geometry": "run3.csv"
-    }
-]
