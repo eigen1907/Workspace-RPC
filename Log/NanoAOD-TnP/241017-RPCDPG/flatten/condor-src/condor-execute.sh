@@ -6,8 +6,8 @@ OUTPUT_DIR=RPC-TnP-NanoAOD
 FLAT_OUTPUT_DIR=RPC-TnP-Flat-NanoAOD
 CONFIG_FILE=condor-config/Run3.json
 
-jq -r '.[] | "\(.primary_dataset),\(.proceed_dataset),\(.cert),\(.geometry)"' "${CONFIG_FILE}" | \
-while IFS=',' read -r PRIMARY PROCEED CERT GEOM; do
+jq -r '.[] | "\(.primary_dataset),\(.proceed_dataset),\(.cert)"' "${CONFIG_FILE}" | \
+while IFS=',' read -r PRIMARY PROCEED CERT; do
     CONDOR_DATASET=${PRIMARY}-${PROCEED}
     mkdir ${CONDOR_DATASET}
     touch ${CONDOR_DATASET}/condor.dat 
@@ -26,7 +26,6 @@ Universe   = vanilla
 Executable = condor-src/condor-script.sh
 Arguments  = --cmssw_base ${CMSSW_BASE} \
 --cert ${CERT} \
---geometry ${GEOM} \
 --store ${STORE} \
 --output \$(output) \
 --flat_output \$(flat_output)
