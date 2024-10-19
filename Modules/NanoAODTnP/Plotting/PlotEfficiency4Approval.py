@@ -22,7 +22,7 @@ def init_figure(
     fontsize: float = 20,
     year: Optional[str] = None,
     com: float = 13.6,
-    label1: str = 'Preliminary',
+    label1: str = None,
     lumi: Optional[float] = None,
     lumi_format = "{0: .1f}",
     loc: int = 2,
@@ -110,7 +110,8 @@ def hist_tnp_mass(input_path1, input_path2, output_path):
 
     mh.style.use(mh.styles.CMS)
     fig, ax = plt.subplots(figsize=(12, 8))
-    mh.cms.label(ax=ax, llabel=f'Preliminary', year='Run 3', com=13.6, loc=0, fontsize=24)
+    #mh.cms.label(ax=ax, llabel=f'Preliminary', year='Run 3', com=13.6, loc=0, fontsize=24)
+    mh.cms.label(ax=ax, data=True, year='Run 3', com=13.6, loc=0, fontsize=24)
     ax.set_xlabel(r'$\mu^{+}\mu^{-}$ (Tag-Probe) invariant mass [$\mathit{GeV}$]', fontsize=22)
     ax.set_ylabel(r'Events / 0.5 $\mathit{GeV}$', fontsize=22)
     ax.set_xlim(70, 110)
@@ -150,7 +151,7 @@ def hist_tnp_mass(input_path1, input_path2, output_path):
 
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
-    fig.savefig(output_path)
+    fig.savefig(output_path, format='eps')
     plt.close(fig)
 
 def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
@@ -201,7 +202,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
         fontsize = 24,
         year = 'Run 3',
         com = 13.6,
-        label1 = f'Preliminary',
+        #label1 = f'Preliminary',
         loc = 0,
         xlabel = 'Efficiency [%]',
         ylabel = 'Number of Rolls',
@@ -275,7 +276,7 @@ def hist_eff_by_roll(input_path_1, input_path_2, region, output_path):
     output_path = Path(output_path)
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
-    fig.savefig(output_path)
+    fig.savefig(output_path, format='eps')
     plt.close(fig)
     return [eff_1, eff_2]
 
@@ -365,7 +366,7 @@ def plot_eff_by_time_run3(input_path,
         figsize = (30, 10),
         fontsize = 34,
         com = r'$\sqrt{s} = 13.6$',
-        label1 = 'Preliminary',
+        #label1 = 'Preliminary',
         year = "2022 & 2023 pp Data",
         lumi = lumi,
         #mid_label = f'{mid_label}',
@@ -437,5 +438,5 @@ def plot_eff_by_time_run3(input_path,
 
     if not output_path.parent.exists():
         output_path.parent.mkdir(parents=True)
-    fig.savefig(output_path)
+    fig.savefig(output_path, format='eps')
     plt.close(fig)
